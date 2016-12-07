@@ -1,12 +1,23 @@
+import java.util.Random;
+
 import javafx.scene.paint.Color;
 
 public class DShapeModel {
 	private int x, y, width, height;
 	private Color color;
+	
 
 	public DShapeModel() {
 		x = y = width = height = 0;
 		color = Color.GRAY;
+	}
+	
+	void randomize() {
+		Random random = new Random();
+		x = random.nextInt(390)+ 10;
+		y = random.nextInt(390) + 10;
+		width = random.nextInt(90) + 10;
+		height = random.nextInt(90) + 10;
 	}
 
 	void setDShapeModel(int x, int y, int width, int height, Color color) {
