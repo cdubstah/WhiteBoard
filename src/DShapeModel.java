@@ -4,7 +4,12 @@ public class DShapeModel {
 	private int x, y, width, height;
 	private Color color;
 
-	public DShapeModel(int x, int y, int width, int height, Color color) {
+	public DShapeModel() {
+		x = y = width = height = 0;
+		color = Color.GRAY;
+	}
+
+	void setDShapeModel(int x, int y, int width, int height, Color color) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -38,7 +43,7 @@ public class DShapeModel {
 	int getHeight() {
 		return height;
 	}
-	
+
 	Color getColor() {
 		return color;
 	}
