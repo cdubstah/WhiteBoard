@@ -1,4 +1,4 @@
 
-public class DShape {
+public abstract class DShape {
 
 }
