@@ -23,5 +23,24 @@ public class DShapeModel {
 		this.color = color;
 	}
 
+	int getX() {
+		return x;
+	}
+
+	int getY() {
+		return y;
+	}
+
+	int getWidth() {
+		return width;
+	}
+
+	int getHeight() {
+		return height;
+	}
 	
+	Color getColor() {
+		return color;
+	}
+
 }
