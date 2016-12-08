@@ -1,7 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 
 public class DRect extends DShape {
 
