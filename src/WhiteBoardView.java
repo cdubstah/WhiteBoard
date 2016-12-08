@@ -99,14 +99,15 @@ public class WhiteBoardView extends Application {
 		canvas.addEventHandler(MouseDragEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				/*
+				if(selected == null)
+					return;
 				// loop through knob array
 				for(int i = 0; i < knobs.length; i++) {
 					// if mouse location is over a knob
 					int x = knobs[i].getX();
-					if (x >= e.getX() && x <= x + DShape.getKnobLength()) {
+					if (x <= e.getX() && e.getX() <= x + DShape.getKnobLength()) {
 						int y = knobs[i].getY();
-						if (y >= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
+						if (y <= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
 							System.out.println("i: " + i);
 							// resize and return
 							switch(i) {
@@ -127,11 +128,10 @@ public class WhiteBoardView extends Application {
 						}
 					}
 				}
-				*/
+				
 				// otherwise drag
 				// only drag if selected
-				if(selected == null)
-					return;
+				
 				selected.move((int) e.getX() - selected.getWidth() / 2,(int) e.getY() - selected.getHeight() / 2);
 				// clear board
 				Paint prev = gc.getFill();
