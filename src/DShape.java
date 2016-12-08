@@ -18,5 +18,6 @@ public class DShape{
 	
 	void move(int x, int y) {
 		shape.move(x, y);
+		
 	}
 }
