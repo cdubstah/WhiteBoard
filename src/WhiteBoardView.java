@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -15,8 +15,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class WhiteBoardView extends Application {
@@ -39,6 +37,7 @@ public class WhiteBoardView extends Application {
 		
 		p.getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
+		// handles selection of shape
 		canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
@@ -52,24 +51,54 @@ public class WhiteBoardView extends Application {
 						double shapeY = shapes.get(i).getShapeModel().getY();
 						double shapeHeight = shapes.get(i).getShapeModel().getHeight();
 						if (shapeY <= y && shapeY + shapeHeight >= y) {
+							// clear board
 							Paint prev = gc.getFill();
 							gc.setFill(Color.WHITE);
 							gc.fillRect(0, 0, 400, 400);
 							gc.setFill(prev);
-							if(selected != null)
-								selected.draw(gc);
 							selected = shapes.get(i);
-							
+							// make selected on top
+							shapes.remove(i);
+							shapes.add(selected);
+							// draw all other shapes
 							for (DShape s : shapes) {
 								if (s != selected) {
-								s.draw(gc);
+									s.draw(gc);
 								}
 							}
-							selected.drawSelected(gc, cp.getValue());
+							// draw selected
+							if(selected != null)
+								selected.drawSelected(gc, cp.getValue());
 							break;
 						}
 					}
 				}
+			}
+		});
+		
+		// handles shape movement
+		canvas.addEventHandler(MouseDragEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				System.out.println("Dragged to " + e.getX() + ", " + e.getY());
+				// only drag if selected
+				if(selected == null)
+					return;
+				selected.move((int) e.getX(),(int) e.getY());
+				// clear board
+				Paint prev = gc.getFill();
+				gc.setFill(Color.WHITE);
+				gc.fillRect(0, 0, 400, 400);
+				gc.setFill(prev);
+				// draw all other shapes
+				for (DShape s : shapes) {
+					if (s != selected) {
+						s.draw(gc);
+					}
+				}
+				// draw selected
+				if(selected != null)
+					selected.drawSelected(gc, cp.getValue());
 			}
 		});
 
@@ -85,7 +114,7 @@ public class WhiteBoardView extends Application {
 		VBox controls = new VBox(); // CONTROL VBOX
 		FlowPane shapeSelector = new FlowPane();
 		shapeSelector.setVgap(10);
-		cp = new ColorPicker();
+		cp = new ColorPicker(Color.BLUE);
 		
 
 		// THIS SHAPE SELECTING BUTTONS //

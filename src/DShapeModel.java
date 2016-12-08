@@ -27,11 +27,9 @@ public class DShapeModel {
 		this.color = color;
 	}
 
-	void move(int x, int y, int width, int height) {
+	void move(int x, int y) {
 		this.x = x;
-		this.y = x;
-		this.width = width;
-		this.height = height;
+		this.y = y;
 	}
 
 	void setColor(Color color) {
