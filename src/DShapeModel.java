@@ -34,7 +34,7 @@ public class DShapeModel {
 		this.height = height;
 	}
 
-	void changeColor(Color color) {
+	void setColor(Color color) {
 		this.color = color;
 	}
 

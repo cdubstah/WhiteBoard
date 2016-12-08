@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -13,6 +14,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
@@ -22,21 +24,27 @@ public class WhiteBoardView extends Application {
 	Canvas canvas;
 	GraphicsContext gc;
 	DShape selected;
+	ColorPicker cp;
 
 	public void start(Stage primaryStage) throws Exception {
-		// INSTEAD OF CANVAS CLASS WE just utilized canvas built into
+		startDraw(primaryStage);
+		
+	}
+	
+	public void startDraw(Stage primaryStage) {
 		Pane p = new Pane();
 		p.setMinSize(400, 400);
 		p.setStyle("-fx-background-color : white");
 		canvas = new Canvas(400, 400);// CANVAS
-
+		
 		p.getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
-		canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+		canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				double x = e.getX();
 				double y = e.getY();
+				
 				for (int i = shapes.size() - 1; i >= 0; i--) {
 					double shapeX = shapes.get(i).getShapeModel().getX();
 					double shapeWidth = shapes.get(i).getShapeModel().getWidth();
@@ -44,8 +52,21 @@ public class WhiteBoardView extends Application {
 						double shapeY = shapes.get(i).getShapeModel().getY();
 						double shapeHeight = shapes.get(i).getShapeModel().getHeight();
 						if (shapeY <= y && shapeY + shapeHeight >= y) {
+							Paint prev = gc.getFill();
+							gc.setFill(Color.WHITE);
+							gc.fillRect(0, 0, 400, 400);
+							gc.setFill(prev);
+							if(selected != null)
+								selected.draw(gc);
 							selected = shapes.get(i);
-							selected.drawSelected(gc);
+							
+							for (DShape s : shapes) {
+								if (s != selected) {
+								s.draw(gc);
+								}
+							}
+							selected.drawSelected(gc, cp.getValue());
+							break;
 						}
 					}
 				}
@@ -63,6 +84,9 @@ public class WhiteBoardView extends Application {
 		BorderPane bp = new BorderPane(); // BORDER PANE
 		VBox controls = new VBox(); // CONTROL VBOX
 		FlowPane shapeSelector = new FlowPane();
+		shapeSelector.setVgap(10);
+		cp = new ColorPicker();
+		
 
 		// THIS SHAPE SELECTING BUTTONS //
 		shapeSelector.setHgap(10);
@@ -83,8 +107,14 @@ public class WhiteBoardView extends Application {
 		Button line = new Button("Line");
 		Button text = new Button("Text");
 		// SHAPE SELECTING BUTTONS ABOVE //
-
-		shapeSelector.getChildren().addAll(addLabel, rectangle, oval, line, text);
+		
+		Button reset = new Button("RESET");
+		reset.setOnMouseReleased(e -> {
+			shapes = new ArrayList<DShape>();
+			startDraw(primaryStage);
+			
+		});
+		shapeSelector.getChildren().addAll(addLabel, rectangle, oval, line, text, cp, reset);
 		controls.getChildren().add(shapeSelector);
 		bp.setRight(p);
 		bp.setLeft(controls);
@@ -94,7 +124,6 @@ public class WhiteBoardView extends Application {
 		primaryStage.show();
 
 	}
-
 	public static void main(String[] args) {
 		launch(args);
 	}
