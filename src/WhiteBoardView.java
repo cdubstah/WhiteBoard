@@ -57,18 +57,15 @@ public class WhiteBoardView extends Application {
 							gc.fillRect(0, 0, 400, 400);
 							gc.setFill(prev);
 							selected = shapes.get(i);
-							// make selected on top
-							shapes.remove(i);
-							shapes.add(selected);
 							// draw all other shapes
 							for (DShape s : shapes) {
 								if (s != selected) {
 									s.draw(gc);
 								}
+								// draw selected
+								if(selected == s)
+									selected.drawSelected(gc);
 							}
-							// draw selected
-							if(selected != null)
-								selected.drawSelected(gc, cp.getValue());
 							break;
 						}
 					}
@@ -94,10 +91,10 @@ public class WhiteBoardView extends Application {
 					if (s != selected) {
 						s.draw(gc);
 					}
+					// draw selected
+					if(selected == s)
+						selected.drawSelected(gc);
 				}
-				// draw selected
-				if(selected != null)
-					selected.drawSelected(gc, cp.getValue());
 			}
 		});
 
@@ -110,15 +107,16 @@ public class WhiteBoardView extends Application {
 		// o.draw(gc);
 
 		BorderPane bp = new BorderPane(); // BORDER PANE
-		VBox controls = new VBox(); // CONTROL VBOX
-		FlowPane shapeSelector = new FlowPane();
-		shapeSelector.setVgap(10);
-		cp = new ColorPicker(Color.BLUE);
+		VBox controls = new VBox(20); // CONTROL VBOX
 		
 
-		// THIS SHAPE SELECTING BUTTONS //
+		// THIS SHAPE ADDITION BUTTONS //
+		FlowPane shapeSelector = new FlowPane();
+		shapeSelector.setVgap(10);
 		shapeSelector.setHgap(10);
-		Label addLabel = new Label("Add");
+		
+		
+		Label addLabel = new Label("Add:");
 		Button rectangle = new Button("Rectangle");
 		rectangle.setOnMouseReleased(e -> {
 			DShape s = new DRect();
@@ -134,9 +132,64 @@ public class WhiteBoardView extends Application {
 		});
 		Button line = new Button("Line");
 		Button text = new Button("Text");
+		
+		shapeSelector.getChildren().addAll(addLabel, rectangle, oval, line, text);
 		// SHAPE SELECTING BUTTONS ABOVE //
 		
+		// MODIFICATION BUTTONS //
+		FlowPane modifyButtons = new FlowPane();
+		modifyButtons.setHgap(10);
+		modifyButtons.setVgap(10);
+		
+		Label modifyLabel = new Label("Modify: ");
+		
+		cp = new ColorPicker(Color.BLUE);
+		Button setColor = new Button("Set Color");
+		setColor.setOnMouseReleased(e -> {
+			// do nothing if no selected shape
+			if(selected == null)
+				return;
+			// change selected color
+			selected.setColor(cp.getValue());
+			// clear board
+			Paint prev = gc.getFill();
+			gc.setFill(Color.WHITE);
+			gc.fillRect(0, 0, 400, 400);
+			gc.setFill(prev);
+			// draw all shapes
+			for (DShape s : shapes) {
+				if (s != selected) {
+					s.draw(gc);
+				}
+				if(s == selected) {
+					selected.drawSelected(gc, cp.getValue());
+				}
+			}
+		});
+		
+		Button delete = new Button("Delete Selected");
+		delete.setOnMouseReleased(e -> {
+			// delete nothing if no selected shape
+			if(selected == null)
+				return;
+			// remove selected
+			shapes.remove(shapes.indexOf(selected));
+			selected = null;
+			// clear board
+			Paint prev = gc.getFill();
+			gc.setFill(Color.WHITE);
+			gc.fillRect(0, 0, 400, 400);
+			gc.setFill(prev);
+			// draw all shapes
+			for (DShape s : shapes) {
+				if (s != selected) {
+					s.draw(gc);
+				}
+			}
+		});
+		
 		Button reset = new Button("RESET");
+		reset.setTextFill(Color.RED);
 		reset.setOnMouseReleased(e -> {
 			selected = null;
 			shapes = new ArrayList<DShape>();
@@ -144,8 +197,55 @@ public class WhiteBoardView extends Application {
 			startDraw(primaryStage);
 			
 		});
-		shapeSelector.getChildren().addAll(addLabel, rectangle, oval, line, text, cp, reset);
-		controls.getChildren().add(shapeSelector);
+		
+		Button moveFront = new Button("Move to Front");
+		moveFront.setOnMouseReleased(e -> {
+			if(selected != null) {
+				shapes.remove(shapes.indexOf(selected));
+				shapes.add(selected);
+			}
+			// clear board
+			Paint prev = gc.getFill();
+			gc.setFill(Color.WHITE);
+			gc.fillRect(0, 0, 400, 400);
+			gc.setFill(prev);
+			// draw all shapes
+			for (DShape s : shapes) {
+				if (s != selected) {
+					s.draw(gc);
+				}
+				if(s == selected) {
+					selected.drawSelected(gc);
+				}
+			}
+		});
+		
+		Button moveBack = new Button("Move to Back");
+		moveBack.setOnMouseReleased(e -> {
+			if(selected != null) {
+				shapes.remove(shapes.indexOf(selected));
+				shapes.add(0, selected);
+			}
+			// clear board
+			Paint prev = gc.getFill();
+			gc.setFill(Color.WHITE);
+			gc.fillRect(0, 0, 400, 400);
+			gc.setFill(prev);
+			// draw all shapes
+			for (DShape s : shapes) {
+				if (s != selected) {
+					s.draw(gc);
+				}
+				if(s == selected) {
+					selected.drawSelected(gc);
+				}
+			}
+		});
+		
+		modifyButtons.getChildren().addAll(modifyLabel, cp, setColor, delete, reset, moveFront, moveBack);
+		// MODIFICATION BUTTONS ABOVE //
+		
+		controls.getChildren().addAll(shapeSelector, modifyButtons);
 		bp.setRight(p);
 		bp.setLeft(controls);
 		Scene scene = new Scene(bp, 800, 400);
@@ -156,5 +256,22 @@ public class WhiteBoardView extends Application {
 	}
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	private void reDrawCanvas() {
+		// clear board
+		Paint prev = gc.getFill();
+		gc.setFill(Color.WHITE);
+		gc.fillRect(0, 0, 400, 400);
+		gc.setFill(prev);
+		// draw all shapes
+		for (DShape s : shapes) {
+			if (s != selected) {
+				s.draw(gc);
+			}
+			if(s == selected) {
+				selected.drawSelected(gc, cp.getValue());
+			}
+		}
 	}
 }
