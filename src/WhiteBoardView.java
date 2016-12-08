@@ -80,7 +80,6 @@ public class WhiteBoardView extends Application {
 		canvas.addEventHandler(MouseDragEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				System.out.println("Dragged to " + e.getX() + ", " + e.getY());
 				// only drag if selected
 				if(selected == null)
 					return;
