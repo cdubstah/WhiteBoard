@@ -146,6 +146,7 @@ public class WhiteBoardView extends Application {
 					// draw selected
 					if(selected == s)
 						selected.drawSelected(gc);
+					gc.setFill(prev);
 				}
 			}
 		});
@@ -216,6 +217,7 @@ public class WhiteBoardView extends Application {
 				if(s == selected) {
 					selected.drawSelected(gc, cp.getValue());
 				}
+				gc.setFill(prev);
 			}
 		});
 		

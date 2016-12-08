@@ -13,7 +13,6 @@ public class DOval extends DShape {
 	void drawSelected(GraphicsContext gc) {
 		gc.setFill(shape.getColor());
 		gc.fillOval(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
-		gc.strokeText("x", shape.getX() + shape.getWidth() / 2, shape.getY() + shape.getHeight() / 2);
 		gc.setFill(Color.BLACK);
 		drawKnobs(gc);
 	}
@@ -22,7 +21,8 @@ public class DOval extends DShape {
 		shape.setColor(color);
 		gc.setFill(color);
 		gc.fillOval(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
-		gc.strokeText("x", shape.getX() + shape.getWidth() / 2, shape.getY() + shape.getHeight() / 2);
+		gc.setFill(Color.BLACK);
+		drawKnobs(gc);
 	}
 	
 	
