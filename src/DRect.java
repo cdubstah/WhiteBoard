@@ -10,7 +10,6 @@ public class DRect extends DShape {
 	}
 ;
 	void draw(GraphicsContext gc) {
-		gc.strokeText("", shape.getX() + shape.getWidth() / 2, shape.getY() + shape.getHeight() / 2);
 		gc.setFill(shape.getColor());
 //		gc.strokeRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
 		gc.fillRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());

@@ -110,7 +110,9 @@ public class WhiteBoardView extends Application {
 		
 		Button reset = new Button("RESET");
 		reset.setOnMouseReleased(e -> {
+			selected = null;
 			shapes = new ArrayList<DShape>();
+			gc.setFill(Color.WHITE);
 			startDraw(primaryStage);
 			
 		});
