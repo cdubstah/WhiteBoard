@@ -6,7 +6,7 @@ public class DShape{
 
 	public DShape() {
 		shape = new DRectModel();
-		shape.randomize();
+		shape.setDefault();
 	}
 	
 	DShapeModel getShapeModel() {
@@ -14,9 +14,15 @@ public class DShape{
 	}
 	void draw(GraphicsContext gc) { }
 	
+	void drawSelected(GraphicsContext gc) { }
+	
 	void drawSelected(GraphicsContext gc, Color color ) { }
 	
 	void move(int x, int y) {
 		shape.move(x, y);
+	}
+	
+	void setColor(Color color) {
+		shape.setColor(color);
 	}
 }

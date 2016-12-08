@@ -3,15 +3,15 @@ import javafx.scene.paint.Color;
 
 public class DRect extends DShape {
 
-	public DRect() {
-		super();
-	}
-;
 	void draw(GraphicsContext gc) {
-		gc.strokeText("", shape.getX() + shape.getWidth() / 2, shape.getY() + shape.getHeight() / 2);
 		gc.setFill(shape.getColor());
-//		gc.strokeRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
 		gc.fillRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
+	}
+	
+	void drawSelected(GraphicsContext gc) {
+		gc.setFill(shape.getColor());
+		gc.fillRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
+		gc.strokeText("x", shape.getX() + shape.getWidth() / 2, shape.getY() + shape.getHeight() / 2);
 	}
 
 	void drawSelected(GraphicsContext gc, Color color) {
