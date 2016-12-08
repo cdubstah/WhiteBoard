@@ -19,11 +19,12 @@ import javafx.stage.Stage;
 
 public class WhiteBoardView extends Application {
 	ArrayList<DShape> shapes = new ArrayList<DShape>();
+	DShape knobs[] = new DShape[4]; // 0 == TOP_LEFT, 1 == TOP_RIGHT, 2 == BOTTOM_LEFT, 3 == BOTTOM_RIGHT
 	Canvas canvas;
 	GraphicsContext gc;
 	DShape selected;
 	ColorPicker cp;
-
+	
 	public void start(Stage primaryStage) throws Exception {
 		startDraw(primaryStage);
 		
@@ -63,8 +64,29 @@ public class WhiteBoardView extends Application {
 									s.draw(gc);
 								}
 								// draw selected
-								if(selected == s)
+								if(selected == s) {
+									int xpos = selected.getX() - DShape.getKnobLength() / 2;
+									int ypos = selected.getY() - DShape.getKnobLength() / 2;
+									int xWidth = selected.getWidth();
+									int yHeight = selected.getHeight();
+									knobs[0] = new DShape();
+									knobs[0].setDShapeModel(
+											xpos, ypos, DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+									knobs[1] = new DShape();
+									knobs[1].setDShapeModel(
+											(xpos + xWidth), ypos,
+											DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+									knobs[2] = new DShape();
+									knobs[2].setDShapeModel(
+											xpos, (ypos + yHeight),
+											DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+									knobs[3] = new DShape();
+									knobs[3].setDShapeModel(
+											xpos + xWidth, ypos + yHeight,
+											DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
 									selected.drawSelected(gc);
+									gc.setFill(prev);
+								}
 							}
 							break;
 						}
@@ -77,10 +99,40 @@ public class WhiteBoardView extends Application {
 		canvas.addEventHandler(MouseDragEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				/*
+				// loop through knob array
+				for(int i = 0; i < knobs.length; i++) {
+					// if mouse location is over a knob
+					int x = knobs[i].getX();
+					if (x >= e.getX() && x <= x + DShape.getKnobLength()) {
+						int y = knobs[i].getY();
+						if (y >= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
+							System.out.println("i: " + i);
+							// resize and return
+							switch(i) {
+							case 0:
+								// resize top left
+								break;
+							case 1:
+								// resize top right
+								break;
+							case 2:
+								// resize bottom left
+								break;
+							case 3:
+								// resize bottom right
+								break;
+							}
+							return;
+						}
+					}
+				}
+				*/
+				// otherwise drag
 				// only drag if selected
 				if(selected == null)
 					return;
-				selected.move((int) e.getX(),(int) e.getY());
+				selected.move((int) e.getX() - selected.getWidth() / 2,(int) e.getY() - selected.getHeight() / 2);
 				// clear board
 				Paint prev = gc.getFill();
 				gc.setFill(Color.WHITE);
