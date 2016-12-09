@@ -96,7 +96,7 @@ public class WhiteBoardView extends Application {
 			}
 		});
 		
-		// handles shape movement
+		// handles shape movement and resizing
 		canvas.addEventHandler(MouseDragEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
@@ -115,7 +115,11 @@ public class WhiteBoardView extends Application {
 							int newWidth = selected.getWidth();
 							int newHeight = selected.getHeight();
 							if(newWidth >= 0 && newHeight >= 0) {
-								knobs[0].move(newX - knobs[0].getWidth() / 2, newX - knobs[0].getHeight() / 2);
+								knobs[0].move(newX - knobs[0].getWidth() / 2, newY - knobs[0].getHeight() / 2);
+								// update 1
+								knobs[1].move(knobs[1].getX(), newY - knobs[1].getHeight() / 2);
+								// update 2
+								knobs[2].move(newX - knobs[2].getWidth() / 2, knobs[2].getY());
 								selected.setDShapeModel(
 										newX, newY, selected.getWidth() + (oldX - newX), selected.getHeight() + (oldY - newY));
 							} else if(newWidth < 0){
@@ -132,7 +136,11 @@ public class WhiteBoardView extends Application {
 							break;
 						case 1:
 							// resize top right
-							knobs[1].move( newX - knobs[1].getWidth() / 2, newY - knobs[1].getHeight() / 2);
+							knobs[1].move(newX - knobs[1].getWidth() / 2, newY - knobs[1].getHeight() / 2);
+							// update 0
+							knobs[0].move(knobs[0].getX(), newY - knobs[0].getHeight() / 2);
+							// update 3
+							knobs[3].move(newX - knobs[3].getHeight() / 3, knobs[3].getY());
 							int newHeight1 = selected.getHeight();
 							int newWidth1 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
 							if(newHeight1 >= 0 && newWidth1 >= 0) {
@@ -153,6 +161,10 @@ public class WhiteBoardView extends Application {
 						case 2:
 							// resize bottom left
 							knobs[2].move(newX - knobs[2].getWidth() / 2, newY - knobs[2].getHeight() / 2);
+							// update 0
+							knobs[0].move(newX - knobs[0].getWidth() / 2, knobs[0].getY());
+							// update 3
+							knobs[3].move(knobs[3].getX(), newY - knobs[3].getHeight() / 2);
 							int newHeight2 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
 							int newWidth2 = selected.getWidth();
 							if(newHeight2 >= 0 && newWidth2 >= 0) {
@@ -173,6 +185,10 @@ public class WhiteBoardView extends Application {
 						case 3:
 							// resize bottom right
 							knobs[3].move(newX - knobs[3].getWidth() / 2, newY - knobs[3].getHeight() / 2);
+							// update 1
+							knobs[1].move(newX - knobs[1].getWidth() / 2, knobs[1].getY());
+							// update 2
+							knobs[2].move(knobs[2].getX(), newY - knobs[2].getHeight() / 2);
 							int newHeight3 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
 							int newWidth3 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
 							if(newHeight3 >= 0 && newWidth3 >= 0) {
