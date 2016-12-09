@@ -40,7 +40,6 @@ public class DShape{
 	
 	void move(int x, int y) {
 		shape.move(x, y);
-		
 	}
 	
 	void setColor(Color color) {
@@ -69,5 +68,9 @@ public class DShape{
 	
 	void setDShapeModel(int x, int y, int width, int height, Color color) {
 		shape.setDShapeModel(x, y, width, height, color);
+	}
+	
+	void setDShapeModel(int x, int y, int width, int height) {
+		shape.setDShapeModel(x, y, width, height);
 	}
 }

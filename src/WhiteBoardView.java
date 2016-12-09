@@ -24,10 +24,11 @@ public class WhiteBoardView extends Application {
 	GraphicsContext gc;
 	DShape selected;
 	ColorPicker cp;
+	boolean isResizing = false, isDragging = false;
+	int currentKnob;
 	
 	public void start(Stage primaryStage) throws Exception {
 		startDraw(primaryStage);
-		
 	}
 	
 	public void startDraw(Stage primaryStage) {
@@ -39,7 +40,7 @@ public class WhiteBoardView extends Application {
 		p.getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
 		// handles selection of shape
-		canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				double x = e.getX();
@@ -102,52 +103,132 @@ public class WhiteBoardView extends Application {
 				if(selected == null)
 					return;
 				// loop through knob array
-				for(int i = 0; i < knobs.length; i++) {
-					// if mouse location is over a knob
-					int x = knobs[i].getX();
-					if (x <= e.getX() && e.getX() <= x + DShape.getKnobLength()) {
-						int y = knobs[i].getY();
-						if (y <= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
-							System.out.println("i: " + i);
-							// resize and return
-							switch(i) {
-							case 0:
-								// resize top left
-								break;
-							case 1:
-								// resize top right
-								break;
-							case 2:
-								// resize bottom left
-								break;
-							case 3:
-								// resize bottom right
-								break;
+				if(!isDragging) {
+					if(isResizing) {
+						int oldX = selected.getX();
+						int oldY = selected.getY();
+						int newX = (int) e.getX();
+						int newY = (int) e.getY();
+						switch(currentKnob) {
+						case 0:
+							// resize top left
+							knobs[0].move(newX - knobs[0].getWidth() / 2, newX - knobs[0].getHeight() / 2);
+							selected.setDShapeModel(
+									newX, newY, selected.getWidth() + (oldX - newX), selected.getHeight() + (oldY - newY));
+							break;
+						case 1:
+							// resize top right
+							knobs[1].move( newX - knobs[1].getWidth() / 2, newY - knobs[1].getHeight() / 2);
+							selected.setDShapeModel(
+									oldX, newY, selected.getWidth() + (newX - (oldX + selected.getWidth())), selected.getHeight() + (oldY - newY));
+							break;
+						case 2:
+							// resize bottom left
+							knobs[2].move(newX - knobs[2].getWidth() / 2, newY - knobs[2].getHeight() / 2);
+							selected.setDShapeModel(
+									newX, oldY, selected.getWidth() + (oldX - newX), selected.getHeight() + (newY - (oldY + selected.getHeight())));
+							break;
+						case 3:
+							// resize bottom right
+							knobs[3].move(newX - knobs[3].getWidth() / 2, newY - knobs[3].getHeight() / 2);
+							selected.setDShapeModel(
+									oldX, oldY, selected.getWidth() + (newX - (oldX + selected.getWidth())),
+									selected.getHeight() + (newY - (oldY + selected.getHeight())));
+							break;
+						}
+						// clear board
+						Paint prev = gc.getFill();
+						gc.setFill(Color.WHITE);
+						gc.fillRect(0, 0, 400, 400);
+						gc.setFill(prev);
+						// draw all other shapes
+						for (DShape s : shapes) {
+							if (s != selected) {
+								s.draw(gc);
 							}
-							return;
+							// draw selected
+							if(selected == s)
+								selected.drawSelected(gc);
+							gc.setFill(prev);
+						}
+						return;
+					}
+					for(int i = 0; i < knobs.length; i++) {
+						// if mouse location is over a knob
+						int x = knobs[i].getX();
+						if (x <= e.getX() && e.getX() <= x + DShape.getKnobLength()) {
+							int y = knobs[i].getY();
+							if (y <= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
+								isResizing = true;
+								// resize and return
+								switch(i) {
+								case 0:
+									// resize top left
+									currentKnob = 0;
+									break;
+								case 1:
+									// resize top right
+									currentKnob = 1;
+									break;
+								case 2:
+									// resize bottom left
+									currentKnob = 2;
+									break;
+								case 3:
+									// resize bottom right
+									currentKnob = 3;
+									break;
+								}
+								// clear board
+								Paint prev = gc.getFill();
+								gc.setFill(Color.WHITE);
+								gc.fillRect(0, 0, 400, 400);
+								gc.setFill(prev);
+								// draw all other shapes
+								for (DShape s : shapes) {
+									if (s != selected) {
+										s.draw(gc);
+									}
+									// draw selected
+									if(selected == s)
+										selected.drawSelected(gc);
+									gc.setFill(prev);
+								}
+								return;
+							}
 						}
 					}
 				}
 				
 				// otherwise drag
 				// only drag if selected
-				
-				selected.move((int) e.getX() - selected.getWidth() / 2,(int) e.getY() - selected.getHeight() / 2);
-				// clear board
-				Paint prev = gc.getFill();
-				gc.setFill(Color.WHITE);
-				gc.fillRect(0, 0, 400, 400);
-				gc.setFill(prev);
-				// draw all other shapes
-				for (DShape s : shapes) {
-					if (s != selected) {
-						s.draw(gc);
-					}
-					// draw selected
-					if(selected == s)
-						selected.drawSelected(gc);
+				if(!isResizing) {
+					isDragging = true;
+					selected.move((int) e.getX() - selected.getWidth() / 2,(int) e.getY() - selected.getHeight() / 2);
+					// clear board
+					Paint prev = gc.getFill();
+					gc.setFill(Color.WHITE);
+					gc.fillRect(0, 0, 400, 400);
 					gc.setFill(prev);
+					// draw all other shapes
+					for (DShape s : shapes) {
+						if (s != selected) {
+							s.draw(gc);
+						}
+						// draw selected
+						if(selected == s)
+							selected.drawSelected(gc);
+						gc.setFill(prev);
+					}
 				}
+			}
+		});
+		
+		canvas.addEventHandler(MouseDragEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				isDragging = isResizing = false;
+				currentKnob = -1;
 			}
 		});
 
@@ -310,22 +391,5 @@ public class WhiteBoardView extends Application {
 	}
 	public static void main(String[] args) {
 		launch(args);
-	}
-	
-	private void reDrawCanvas() {
-		// clear board
-		Paint prev = gc.getFill();
-		gc.setFill(Color.WHITE);
-		gc.fillRect(0, 0, 400, 400);
-		gc.setFill(prev);
-		// draw all shapes
-		for (DShape s : shapes) {
-			if (s != selected) {
-				s.draw(gc);
-			}
-			if(s == selected) {
-				selected.drawSelected(gc, cp.getValue());
-			}
-		}
 	}
 }

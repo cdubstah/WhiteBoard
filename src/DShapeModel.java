@@ -22,12 +22,19 @@ public class DShapeModel {
 		this.height = height;
 		this.color = color;
 	}
+	
+	void setDShapeModel(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
 
 	void move(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-
+	
 	void setColor(Color color) {
 		this.color = color;
 	}
