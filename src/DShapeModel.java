@@ -1,5 +1,6 @@
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class DShapeModel {
 	private int x, y, width, height;
@@ -58,5 +59,11 @@ public class DShapeModel {
 	Color getColor() {
 		return color;
 	}
+	
+	// for text
+	void setText(String txt) { }
+	void setFont(Font font) { }
+	String getText() { return ""; }
+	Font getFont() { return null; }
 
 }

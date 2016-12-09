@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -358,8 +359,15 @@ public class WhiteBoardView extends Application {
 			s.draw(gc);
 			shapes.add(s);
 		});
+		
 		Button line = new Button("Line");
+		
 		Button text = new Button("Text");
+		text.setOnMouseReleased(e -> {
+			DShape s = new DText();
+			s.draw(gc);
+			shapes.add(s);
+		});
 		
 		shapeSelector.getChildren().addAll(addLabel, rectangle, oval, line, text);
 		// SHAPE SELECTING BUTTONS ABOVE //
@@ -474,7 +482,38 @@ public class WhiteBoardView extends Application {
 		modifyButtons.getChildren().addAll(modifyLabel, cp, setColor, delete, reset, moveFront, moveBack);
 		// MODIFICATION BUTTONS ABOVE //
 		
-		controls.getChildren().addAll(shapeSelector, modifyButtons);
+		// TEXT MODIFICATION BUTTONS //
+		FlowPane textButtons = new FlowPane();
+		textButtons.setHgap(10);
+		textButtons.setVgap(10);
+		
+		TextField textField = new TextField("Hello");
+		
+		Button setText = new Button("Set Text");
+		setText.setOnMouseReleased(e -> {
+			if(selected == null)
+				return;
+			selected.setText(textField.getText());
+			// clear board
+			Paint prev = gc.getFill();
+			gc.setFill(Color.WHITE);
+			gc.fillRect(0, 0, 400, 400);
+			gc.setFill(prev);
+			// draw all shapes
+			for (DShape s : shapes) {
+				if (s != selected) {
+					s.draw(gc);
+				}
+				if(s == selected) {
+					selected.drawSelected(gc);
+				}
+			}
+		});
+		
+		textButtons.getChildren().addAll(textField, setText);
+		// TEXT MODIFICATION BUTTONS ABOVE //
+		
+		controls.getChildren().addAll(shapeSelector, modifyButtons, textButtons);
 		bp.setRight(p);
 		bp.setLeft(controls);
 		Scene scene = new Scene(bp, 800, 400);
