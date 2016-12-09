@@ -18,8 +18,8 @@ public class DShapeModel {
 	void setDShapeModel(int x, int y, int width, int height, Color color) {
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.width = Math.abs(width);
+		this.height = Math.abs(height);
 		this.color = color;
 	}
 	

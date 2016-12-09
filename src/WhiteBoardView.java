@@ -112,28 +112,84 @@ public class WhiteBoardView extends Application {
 						switch(currentKnob) {
 						case 0:
 							// resize top left
-							knobs[0].move(newX - knobs[0].getWidth() / 2, newX - knobs[0].getHeight() / 2);
-							selected.setDShapeModel(
-									newX, newY, selected.getWidth() + (oldX - newX), selected.getHeight() + (oldY - newY));
+							int newWidth = selected.getWidth();
+							int newHeight = selected.getHeight();
+							if(newWidth >= 0 && newHeight >= 0) {
+								knobs[0].move(newX - knobs[0].getWidth() / 2, newX - knobs[0].getHeight() / 2);
+								selected.setDShapeModel(
+										newX, newY, selected.getWidth() + (oldX - newX), selected.getHeight() + (oldY - newY));
+							} else if(newWidth < 0){
+								DShape temp = knobs[0];
+								knobs[0] = knobs[1];
+								knobs[1] = temp;
+								currentKnob = 1;
+							} else {
+								DShape temp = knobs[0];
+								knobs[0] = knobs[2];
+								knobs[2] = temp;
+								currentKnob = 2;
+							}
 							break;
 						case 1:
 							// resize top right
 							knobs[1].move( newX - knobs[1].getWidth() / 2, newY - knobs[1].getHeight() / 2);
+							int newHeight1 = selected.getHeight();
+							int newWidth1 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
+							if(newHeight1 >= 0 && newWidth1 >= 0) {
 							selected.setDShapeModel(
 									oldX, newY, selected.getWidth() + (newX - (oldX + selected.getWidth())), selected.getHeight() + (oldY - newY));
+							} else if(newHeight1 < 0){
+								DShape temp = knobs[1];
+								knobs[1] = knobs[3];
+								knobs[3] = temp;
+								currentKnob = 3;
+							} else {
+								DShape temp = knobs[1];
+								knobs[1] = knobs[0];
+								knobs[0] = temp;
+								currentKnob = 0;
+							}
 							break;
 						case 2:
 							// resize bottom left
 							knobs[2].move(newX - knobs[2].getWidth() / 2, newY - knobs[2].getHeight() / 2);
-							selected.setDShapeModel(
-									newX, oldY, selected.getWidth() + (oldX - newX), selected.getHeight() + (newY - (oldY + selected.getHeight())));
+							int newHeight2 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
+							int newWidth2 = selected.getWidth();
+							if(newHeight2 >= 0 && newWidth2 >= 0) {
+								selected.setDShapeModel(
+										newX, oldY, selected.getWidth() + (oldX - newX), selected.getHeight() + (newY - (oldY + selected.getHeight())));
+							} else if(newHeight2 < 0) {
+								DShape temp = knobs[2];
+								knobs[2] = knobs[0];
+								knobs[0] = temp;
+								currentKnob = 0;
+							} else {
+								DShape temp = knobs[2];
+								knobs[2] = knobs[3];
+								knobs[3] = temp;
+								currentKnob = 3;
+							}
 							break;
 						case 3:
 							// resize bottom right
 							knobs[3].move(newX - knobs[3].getWidth() / 2, newY - knobs[3].getHeight() / 2);
-							selected.setDShapeModel(
-									oldX, oldY, selected.getWidth() + (newX - (oldX + selected.getWidth())),
-									selected.getHeight() + (newY - (oldY + selected.getHeight())));
+							int newHeight3 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
+							int newWidth3 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
+							if(newHeight3 >= 0 && newWidth3 >= 0) {
+								selected.setDShapeModel(
+										oldX, oldY, selected.getWidth() + (newX - (oldX + selected.getWidth())),
+										newHeight3);
+							} else if(newHeight3 < 0){
+								DShape temp = knobs[3];
+								knobs[3] = knobs[1];
+								knobs[1] = temp;
+								currentKnob = 1;
+							} else {
+								DShape temp = knobs[3];
+								knobs[3] = knobs[2];
+								knobs[2] = temp;
+								currentKnob = 2;
+							}
 							break;
 						}
 						// clear board
@@ -204,7 +260,29 @@ public class WhiteBoardView extends Application {
 				// only drag if selected
 				if(!isResizing) {
 					isDragging = true;
-					selected.move((int) e.getX() - selected.getWidth() / 2,(int) e.getY() - selected.getHeight() / 2);
+					int newX = (int) e.getX();
+					int newY = (int) e.getY();
+					selected.move(newX - selected.getWidth() / 2, newY - selected.getHeight() / 2);
+					// relocate knobs
+					int xpos = selected.getX() - DShape.getKnobLength() / 2;
+					int ypos = selected.getY() - DShape.getKnobLength() / 2;
+					int xWidth = selected.getWidth();
+					int yHeight = selected.getHeight();
+					knobs[0] = new DShape();
+					knobs[0].setDShapeModel(
+							xpos, ypos, DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+					knobs[1] = new DShape();
+					knobs[1].setDShapeModel(
+							(xpos + xWidth), ypos,
+							DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+					knobs[2] = new DShape();
+					knobs[2].setDShapeModel(
+							xpos, (ypos + yHeight),
+							DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+					knobs[3] = new DShape();
+					knobs[3].setDShapeModel(
+							xpos + xWidth, ypos + yHeight,
+							DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
 					// clear board
 					Paint prev = gc.getFill();
 					gc.setFill(Color.WHITE);
