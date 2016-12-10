@@ -81,7 +81,7 @@ public class DShape{
 	void setWholeText(String txt) { }
 	void setFont(Font font) { }
 	String getText() { return ""; }
-	Font getFont() { return null; }
-	
-	
+	String getWholeText() { return ""; }
+	Font getFont() { return Font.getDefault(); }
+
 }

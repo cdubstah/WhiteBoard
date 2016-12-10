@@ -37,6 +37,8 @@ public class WhiteBoardView extends Application {
 	GraphicsContext gc;
 	DShape selected;
 	ColorPicker cp;
+	TextField textField;
+	ComboBox<String> fontMenu;
 	boolean isResizing = false, isDragging = false;
 	int currentKnob;
 	
@@ -45,6 +47,10 @@ public class WhiteBoardView extends Application {
 	}
 
 	public void startDraw(Stage primaryStage) {
+		textField = new TextField("Hello");
+		ObservableList<String> allFonts = FXCollections.observableList(Font.getFamilies());
+		fontMenu = new ComboBox<String>(allFonts);
+		
 		Pane p = new Pane();
 		p.setMinSize(1920, 1080);
 		p.setStyle("-fx-background-color : white");
@@ -72,6 +78,11 @@ public class WhiteBoardView extends Application {
 							gc.fillRect(0, 0, 400, 400);
 							gc.setFill(prev);
 							selected = shapes.get(i);
+							
+							// Update text fields
+							textField.setText(selected.getWholeText());
+							fontMenu.setValue(selected.getFont().getName());
+							
 							// draw all other shapes
 							for (DShape s : shapes) {
 								if (s != selected) {
@@ -527,10 +538,6 @@ public class WhiteBoardView extends Application {
 		textButtons.setHgap(10);
 		textButtons.setVgap(10);
 
-		TextField textField = new TextField("Hello");
-		
-		ObservableList<String> allFonts = FXCollections.observableList(Font.getFamilies());
-		ComboBox<String> fontMenu = new ComboBox<String>(allFonts);
 		fontMenu.setValue("Dialog");
 		
 		Button setText = new Button("Set Text");

@@ -63,6 +63,10 @@ public class DText extends DShape {
 		return shape.getText();
 	}
 	
+	String getWholeText() {
+		return shape.getWholeText();
+	}
+	
 	Font getFont() {
 		return shape.getFont();
 	}
