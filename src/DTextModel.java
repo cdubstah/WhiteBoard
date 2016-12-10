@@ -7,6 +7,7 @@ public class DTextModel extends DShapeModel {
 	DTextModel() {
 		txt = "Hello";
 		font = Font.font("Dialog", 12);
+		
 	}
 	
 	DTextModel(String txt) {
@@ -14,6 +15,8 @@ public class DTextModel extends DShapeModel {
 		this.txt = txt;
 		font = Font.font("Dialog", 12);
 	}
+	
+	
 	
 	void setText(String txt) {
 		this.txt = txt;

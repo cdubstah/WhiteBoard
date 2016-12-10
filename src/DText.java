@@ -14,10 +14,12 @@ public class DText extends DShape {
 		shape.setDefault();
 	}
 	
+	
 	void draw(GraphicsContext gc) {
 		gc.setFill(shape.getColor());
 		gc.setFont(shape.getFont());
 		gc.fillText(shape.getText(), shape.getX(), shape.getY());
+	
 	}
 	
 	void drawSelected(GraphicsContext gc) {
@@ -34,6 +36,7 @@ public class DText extends DShape {
 		gc.fillText(shape.getText(), shape.getX(), shape.getY());
 		gc.setFill(Color.BLACK);
 		drawKnobs(gc);
+	
 	}
 	
 	void setText(String txt) {
