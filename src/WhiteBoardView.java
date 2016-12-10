@@ -423,6 +423,7 @@ public class WhiteBoardView extends Application {
 			shapes.add(s);
 			tableData.add(s.getShapeModel());
 			table.setItems(tableData);
+			table.refresh();
 		});
 
 		Button oval = new Button("Oval");
@@ -544,9 +545,10 @@ public class WhiteBoardView extends Application {
 		// TEXT MODIFICATION BUTTONS ABOVE //
 		
 		// TABLE //
-		table.setItems(tableData);
+		
 		
 		TableColumn<DShapeModel, String> xPosCol = new TableColumn<DShapeModel, String>("X");
+		
 		xPosCol.setCellValueFactory(new PropertyValueFactory<>("x"));
 		
 		TableColumn<DShapeModel, Integer> yPosCol = new TableColumn<DShapeModel, Integer>("Y");
@@ -558,6 +560,7 @@ public class WhiteBoardView extends Application {
 		TableColumn<DShapeModel, Integer> heightCol = new TableColumn<DShapeModel, Integer>("Height");
 		xPosCol.setCellValueFactory(new PropertyValueFactory<>("height"));
 		table.getColumns().addAll(xPosCol, yPosCol, widthCol, heightCol);
+		table.setItems(tableData);
 		// TABLE ABOVE //
 
 		controls.getChildren().addAll(shapeSelector, modifyButtons, textButtons, table);
@@ -587,7 +590,8 @@ public class WhiteBoardView extends Application {
 			}
 		}
 	}
-
+	
+	
 	public void redrawPrevColor(Paint prev) {
 
 		gc.setFill(Color.WHITE);
