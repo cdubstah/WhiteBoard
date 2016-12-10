@@ -114,7 +114,20 @@ public class WhiteBoardView extends Application {
 					}
 				}
 				if (!isShape) {
-					if (knobs[0] != null) {
+					if(selected instanceof DLine) {
+						for (int i = 0; i < lineKnobs.length; i++) {
+							// if mouse location is over a knob
+							int x1 = lineKnobs[i].getX();
+							if (x1 <= e.getX() && e.getX() <= x1 + DShape.getKnobLength()) {
+								int y1 = lineKnobs[i].getY();
+								if (y1 <= e.getY() && y1 + DShape.getKnobLength() >= e.getY()) {
+									// System.out.println("Knob Detected: Will
+									// not de-select");
+									return;
+								}
+							}
+						}
+					} else if (knobs[0] != null) {
 						for (int i = 0; i < knobs.length; i++) {
 							// if mouse location is over a knob
 							int x1 = knobs[i].getX();
@@ -144,146 +157,195 @@ public class WhiteBoardView extends Application {
 				// loop through knob array
 				if (!isDragging) {
 					if (isResizing) {
-						int oldX = selected.getX();
-						int oldY = selected.getY();
-						int newX = (int) e.getX();
-						int newY = (int) e.getY();
-						switch (currentKnob) {
-						case 0:
-							// resize top left
-							int newWidth = selected.getWidth();
-							int newHeight = selected.getHeight();
-							if (newWidth >= 0 && newHeight >= 0) {
-								knobs[0].move(newX - knobs[0].getWidth() / 2, newY - knobs[0].getHeight() / 2);
-								// update 1
-								knobs[1].move(knobs[1].getX(), newY - knobs[1].getHeight() / 2);
-								// update 2
-								
-								knobs[2].move(newX - knobs[2].getWidth() / 2, knobs[2].getY());
+						if(selected instanceof DLine) {
+							int oldX = selected.getX();
+							int oldY = selected.getY();
+							int newX = (int) e.getX();
+							int newY = (int) e.getY();
+							switch(currentKnob) {
+							case 0:
+								// resize top left
+								lineKnobs[0].move(newX - lineKnobs[0].getWidth() / 2, newY - lineKnobs[0].getHeight() / 2);
 								selected.setDShapeModel(newX, newY, selected.getWidth() + (oldX - newX),
 										selected.getHeight() + (oldY - newY));
-							} else if (newWidth < 0) {
-								DShape temp = knobs[0];
-								knobs[0] = knobs[1];
-								knobs[1] = temp;
-								currentKnob = 1;
-							} else {
-								DShape temp = knobs[0];
-								knobs[0] = knobs[2];
-								knobs[2] = temp;
-								currentKnob = 2;
-							}
-							break;
-						case 1:
-							// resize top right
-							knobs[1].move(newX - knobs[1].getWidth() / 2, newY - knobs[1].getHeight() / 2);
-							// update 0
-							knobs[0].move(knobs[0].getX(), newY - knobs[0].getHeight() / 2);
-							// update 3
-							knobs[3].move(newX - knobs[3].getHeight() / 3, knobs[3].getY());
-							int newHeight1 = selected.getHeight();
-							int newWidth1 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
-							if (newHeight1 >= 0 && newWidth1 >= 0) {
-								selected.setDShapeModel(oldX, newY,
-										selected.getWidth() + (newX - (oldX + selected.getWidth())),
-										selected.getHeight() + (oldY - newY));
-							} else if (newHeight1 < 0) {
-								DShape temp = knobs[1];
-								knobs[1] = knobs[3];
-								knobs[3] = temp;
-								currentKnob = 3;
-							} else {
-								DShape temp = knobs[1];
-								knobs[1] = knobs[0];
-								knobs[0] = temp;
-								currentKnob = 0;
-							}
-							break;
-						case 2:
-							// resize bottom left
-							knobs[2].move(newX - knobs[2].getWidth() / 2, newY - knobs[2].getHeight() / 2);
-							// update 0
-							knobs[0].move(newX - knobs[0].getWidth() / 2, knobs[0].getY());
-							// update 3
-							knobs[3].move(knobs[3].getX(), newY - knobs[3].getHeight() / 2);
-							int newHeight2 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
-							int newWidth2 = selected.getWidth();
-							if (newHeight2 >= 0 && newWidth2 >= 0) {
-								selected.setDShapeModel(newX, oldY, selected.getWidth() + (oldX - newX),
-										selected.getHeight() + (newY - (oldY + selected.getHeight())));
-							} else if (newHeight2 < 0) {
-								DShape temp = knobs[2];
-								knobs[2] = knobs[0];
-								knobs[0] = temp;
-								currentKnob = 0;
-							} else {
-								DShape temp = knobs[2];
-								knobs[2] = knobs[3];
-								knobs[3] = temp;
-								currentKnob = 3;
-							}
-							break;
-						case 3:
-							// resize bottom right
-							knobs[3].move(newX - knobs[3].getWidth() / 2, newY - knobs[3].getHeight() / 2);
-							// update 1
-							knobs[1].move(newX - knobs[1].getWidth() / 2, knobs[1].getY());
-							// update 2
-							knobs[2].move(knobs[2].getX(), newY - knobs[2].getHeight() / 2);
-							int newHeight3 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
-							int newWidth3 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
-							if (newHeight3 >= 0 && newWidth3 >= 0) {
+								break;
+							case 1:
+								// resize bottom right
+								lineKnobs[1].move(newX - lineKnobs[1].getWidth() / 2, newY - lineKnobs[1].getHeight() / 2);
+								int newHeight3 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
 								selected.setDShapeModel(oldX, oldY,
 										selected.getWidth() + (newX - (oldX + selected.getWidth())), newHeight3);
-							} else if (newHeight3 < 0) {
-								DShape temp = knobs[3];
-								knobs[3] = knobs[1];
-								knobs[1] = temp;
-								currentKnob = 1;
-							} else {
-								DShape temp = knobs[3];
-								knobs[3] = knobs[2];
-								knobs[2] = temp;
-								currentKnob = 2;
+								break;
 							}
-							break;
+						} else {
+							int oldX = selected.getX();
+							int oldY = selected.getY();
+							int newX = (int) e.getX();
+							int newY = (int) e.getY();
+							switch (currentKnob) {
+							case 0:
+								// resize top left
+								int newWidth = selected.getWidth();
+								int newHeight = selected.getHeight();
+								if (newWidth >= 0 && newHeight >= 0) {
+									knobs[0].move(newX - knobs[0].getWidth() / 2, newY - knobs[0].getHeight() / 2);
+									// update 1
+									knobs[1].move(knobs[1].getX(), newY - knobs[1].getHeight() / 2);
+									// update 2
+									
+									knobs[2].move(newX - knobs[2].getWidth() / 2, knobs[2].getY());
+									selected.setDShapeModel(newX, newY, selected.getWidth() + (oldX - newX),
+											selected.getHeight() + (oldY - newY));
+								} else if (newWidth < 0) {
+									DShape temp = knobs[0];
+									knobs[0] = knobs[1];
+									knobs[1] = temp;
+									currentKnob = 1;
+								} else {
+									DShape temp = knobs[0];
+									knobs[0] = knobs[2];
+									knobs[2] = temp;
+									currentKnob = 2;
+								}
+								break;
+							case 1:
+								// resize top right
+								knobs[1].move(newX - knobs[1].getWidth() / 2, newY - knobs[1].getHeight() / 2);
+								// update 0
+								knobs[0].move(knobs[0].getX(), newY - knobs[0].getHeight() / 2);
+								// update 3
+								knobs[3].move(newX - knobs[3].getHeight() / 3, knobs[3].getY());
+								int newHeight1 = selected.getHeight();
+								int newWidth1 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
+								if (newHeight1 >= 0 && newWidth1 >= 0) {
+									selected.setDShapeModel(oldX, newY,
+											selected.getWidth() + (newX - (oldX + selected.getWidth())),
+											selected.getHeight() + (oldY - newY));
+								} else if (newHeight1 < 0) {
+									DShape temp = knobs[1];
+									knobs[1] = knobs[3];
+									knobs[3] = temp;
+									currentKnob = 3;
+								} else {
+									DShape temp = knobs[1];
+									knobs[1] = knobs[0];
+									knobs[0] = temp;
+									currentKnob = 0;
+								}
+								break;
+							case 2:
+								// resize bottom left
+								knobs[2].move(newX - knobs[2].getWidth() / 2, newY - knobs[2].getHeight() / 2);
+								// update 0
+								knobs[0].move(newX - knobs[0].getWidth() / 2, knobs[0].getY());
+								// update 3
+								knobs[3].move(knobs[3].getX(), newY - knobs[3].getHeight() / 2);
+								int newHeight2 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
+								int newWidth2 = selected.getWidth();
+								if (newHeight2 >= 0 && newWidth2 >= 0) {
+									selected.setDShapeModel(newX, oldY, selected.getWidth() + (oldX - newX),
+											selected.getHeight() + (newY - (oldY + selected.getHeight())));
+								} else if (newHeight2 < 0) {
+									DShape temp = knobs[2];
+									knobs[2] = knobs[0];
+									knobs[0] = temp;
+									currentKnob = 0;
+								} else {
+									DShape temp = knobs[2];
+									knobs[2] = knobs[3];
+									knobs[3] = temp;
+									currentKnob = 3;
+								}
+								break;
+							case 3:
+								// resize bottom right
+								knobs[3].move(newX - knobs[3].getWidth() / 2, newY - knobs[3].getHeight() / 2);
+								// update 1
+								knobs[1].move(newX - knobs[1].getWidth() / 2, knobs[1].getY());
+								// update 2
+								knobs[2].move(knobs[2].getX(), newY - knobs[2].getHeight() / 2);
+								int newHeight3 = selected.getHeight() + (newY - (oldY + selected.getHeight()));
+								int newWidth3 = selected.getWidth() + (newX - (oldX + selected.getWidth()));
+								if (newHeight3 >= 0 && newWidth3 >= 0) {
+									selected.setDShapeModel(oldX, oldY,
+											selected.getWidth() + (newX - (oldX + selected.getWidth())), newHeight3);
+								} else if (newHeight3 < 0) {
+									DShape temp = knobs[3];
+									knobs[3] = knobs[1];
+									knobs[1] = temp;
+									currentKnob = 1;
+								} else {
+									DShape temp = knobs[3];
+									knobs[3] = knobs[2];
+									knobs[2] = temp;
+									currentKnob = 2;
+								}
+								break;
+							}
 						}
 						// clear board
 						Paint prev = gc.getFill();
 						redrawPrev(prev);
 						return;
 					}
-					for (int i = 0; i < knobs.length; i++) {
-						// if mouse location is over a knob
-						int x = knobs[i].getX();
-						if (x <= e.getX() && e.getX() <= x + DShape.getKnobLength()) {
-							int y = knobs[i].getY();
-							if (y <= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
-								isResizing = true;
-								// resize and return
-								switch (i) {
-								case 0:
-									// resize top left
-									currentKnob = 0;
-									break;
-								case 1:
-									// resize top right
-									
-									currentKnob = 1;
-									break;
-								case 2:
-									// resize bottom left
-									currentKnob = 2;
-									break;
-								case 3:
-									// resize bottom right
-									currentKnob = 3;
-									break;
+					
+					// which knob?
+					if(selected instanceof DLine) {
+						for (int i = 0; i < lineKnobs.length; i++) {
+							// if mouse location is over a knob
+							int x = lineKnobs[i].getX();
+							if (x <= e.getX() && e.getX() <= x + DShape.getKnobLength()) {
+								int y = lineKnobs[i].getY();
+								if (y <= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
+									isResizing = true;
+									// resize and return
+									switch (i) {
+									case 0:
+										currentKnob = 0;
+										break;
+									case 1:
+										currentKnob = 1;
+										break;
+									}
+									// clear board
+									Paint prev = gc.getFill();
+									redrawPrev(prev);
+									return;
 								}
-								// clear board
-								Paint prev = gc.getFill();
-								redrawPrev(prev);
-								return;
+							}
+						}
+					} else {
+						for (int i = 0; i < knobs.length; i++) {
+							// if mouse location is over a knob
+							int x = knobs[i].getX();
+							if (x <= e.getX() && e.getX() <= x + DShape.getKnobLength()) {
+								int y = knobs[i].getY();
+								if (y <= e.getY() && y + DShape.getKnobLength() >= e.getY()) {
+									isResizing = true;
+									// resize and return
+									switch (i) {
+									case 0:
+										// top left knob
+										currentKnob = 0;
+										break;
+									case 1:
+										// top right knob
+										currentKnob = 1;
+										break;
+									case 2:
+										// bottom left knob
+										currentKnob = 2;
+										break;
+									case 3:
+										// bottom right knob
+										currentKnob = 3;
+										break;
+									}
+									// clear board
+									Paint prev = gc.getFill();
+									redrawPrev(prev);
+									return;
+								}
 							}
 						}
 					}
