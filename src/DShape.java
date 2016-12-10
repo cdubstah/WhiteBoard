@@ -1,12 +1,13 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class DShape{
 	DShapeModel shape;
 	final static int KNOB_LENGTH = 9;
 
 	public DShape() {
-		shape = new DRectModel();
+		shape = new DShapeModel();
 		shape.setDefault();
 	}
 	
@@ -73,4 +74,13 @@ public class DShape{
 	void setDShapeModel(int x, int y, int width, int height) {
 		shape.setDShapeModel(x, y, width, height);
 	}
+	
+	// for text
+	void setText(String txt) { }
+	void setWholeText(String txt) { }
+	void setFont(Font font) { }
+	String getText() { return ""; }
+	Font getFont() { return null; }
+	
+	
 }
