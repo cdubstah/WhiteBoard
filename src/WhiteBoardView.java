@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseDragEvent;
@@ -16,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class WhiteBoardView extends Application {
@@ -28,16 +32,16 @@ public class WhiteBoardView extends Application {
 	ColorPicker cp;
 	boolean isResizing = false, isDragging = false;
 	int currentKnob;
-
+	
 	public void start(Stage primaryStage) throws Exception {
 		startDraw(primaryStage);
 	}
 
 	public void startDraw(Stage primaryStage) {
 		Pane p = new Pane();
-		p.setMinSize(400, 400);
+		p.setMinSize(1920, 1080);
 		p.setStyle("-fx-background-color : white");
-		canvas = new Canvas(400, 400);// CANVAS
+		canvas = new Canvas(1920, 1080);// CANVAS
 
 		p.getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
@@ -417,16 +421,21 @@ public class WhiteBoardView extends Application {
 		textButtons.setVgap(10);
 
 		TextField textField = new TextField("Hello");
+		
+		ObservableList<String> allFonts = FXCollections.observableList(Font.getFamilies());
+		ComboBox<String> fontMenu = new ComboBox<String>(allFonts);
+		fontMenu.setValue("Dialog");
+		
 		Button setText = new Button("Set Text");
 		setText.setOnMouseReleased(e -> {
 			if (selected == null)
 				return;
 			selected.setText(textField.getText());
-			// clear board
+			selected.setFont(Font.font(fontMenu.getValue()));
 			redraw();
 		});
 
-		textButtons.getChildren().addAll(textField, setText);
+		textButtons.getChildren().addAll(textField, fontMenu, setText);
 		// TEXT MODIFICATION BUTTONS ABOVE //
 
 		controls.getChildren().addAll(shapeSelector, modifyButtons, textButtons);
@@ -444,7 +453,7 @@ public class WhiteBoardView extends Application {
 		// clear board
 		Paint prev = gc.getFill();
 		gc.setFill(Color.WHITE);
-		gc.fillRect(0, 0, 400, 400);
+		gc.fillRect(0, 0, 1920, 1080);
 		gc.setFill(prev);
 		// draw all shapes
 		for (DShape s : shapes) {
@@ -460,7 +469,7 @@ public class WhiteBoardView extends Application {
 	public void redrawPrevColor(Paint prev) {
 
 		gc.setFill(Color.WHITE);
-		gc.fillRect(0, 0, 400, 400);
+		gc.fillRect(0, 0, 1920, 1080);
 		gc.setFill(prev);
 		// draw all shapes
 		for (DShape s : shapes) {
@@ -476,7 +485,7 @@ public class WhiteBoardView extends Application {
 
 	public void redrawPrev(Paint prev) {
 		gc.setFill(Color.WHITE);
-		gc.fillRect(0, 0, 400, 400);
+		gc.fillRect(0, 0, 1920, 1080);
 		gc.setFill(prev);
 		// draw all other shapes
 		for (DShape s : shapes) {

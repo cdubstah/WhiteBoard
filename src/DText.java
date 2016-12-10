@@ -1,3 +1,7 @@
+
+import com.sun.javafx.tk.FontMetrics;
+import com.sun.javafx.tk.Toolkit;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -17,15 +21,17 @@ public class DText extends DShape {
 	
 	void draw(GraphicsContext gc) {
 		gc.setFill(shape.getColor());
+		computeFont();
 		gc.setFont(shape.getFont());
-		gc.fillText(shape.getText(), shape.getX(), shape.getY());
-	
+		gc.fillText(shape.getText(), shape.getX(), shape.getY() + shape.getHeight());
+		clipText(gc);
 	}
 	
 	void drawSelected(GraphicsContext gc) {
 		gc.setFill(shape.getColor());
+		computeFont();
 		gc.setFont(shape.getFont());
-		gc.fillText(shape.getText(), shape.getX(), shape.getY());
+		gc.fillText(shape.getText(), shape.getX(), shape.getY() + shape.getHeight());
 		gc.setFill(Color.BLACK);
 		drawKnobs(gc);
 	}
@@ -33,7 +39,8 @@ public class DText extends DShape {
 	void drawSelected(GraphicsContext gc, Color color) {
 		shape.setColor(color);
 		gc.setFill(color);
-		gc.fillText(shape.getText(), shape.getX(), shape.getY());
+		computeFont();
+		gc.fillText(shape.getText(), shape.getX(), shape.getY() + shape.getHeight());
 		gc.setFill(Color.BLACK);
 		drawKnobs(gc);
 	
@@ -53,5 +60,20 @@ public class DText extends DShape {
 	
 	Font getFont() {
 		return shape.getFont();
+	}
+	
+	void computeFont() {
+		shape.computeFont();
+	}
+	
+	void clipText(GraphicsContext gc) {
+		Font newFont = Font.font(getFont().getName(), shape.getFont().getSize());
+		FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
+		double textWidth = fm.computeStringWidth(shape.getText());
+//		if(textWidth > shape.getWidth()) {
+//			// clip
+//			gc.rect(shape.getX() + shape.getWidth(), shape.getY(), textWidth - shape.getWidth(), shape.getHeight());
+//			gc.clip();
+//		}
 	}
 }
