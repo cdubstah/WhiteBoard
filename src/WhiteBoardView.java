@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -10,7 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -24,6 +28,8 @@ import javafx.stage.Stage;
 
 public class WhiteBoardView extends Application {
 	ArrayList<DShape> shapes = new ArrayList<DShape>();
+	ObservableList<DShapeModel> tableData = FXCollections.observableArrayList();
+	TableView<DShapeModel> table = new TableView<DShapeModel>();
 	DShape knobs[] = new DShape[4]; // 0 == TOP_LEFT, 1 == TOP_RIGHT, 2 ==
 									// BOTTOM_LEFT, 3 == BOTTOM_RIGHT
 	DShape lineKnobs[] = new DShape[2];
@@ -415,6 +421,8 @@ public class WhiteBoardView extends Application {
 			DShape s = new DRect();
 			s.draw(gc);
 			shapes.add(s);
+			tableData.add(s.getShapeModel());
+			table.setItems(tableData);
 		});
 
 		Button oval = new Button("Oval");
@@ -422,6 +430,7 @@ public class WhiteBoardView extends Application {
 			DShape s = new DOval();
 			s.draw(gc);
 			shapes.add(s);
+			tableData.add(s.getShapeModel());
 		});
 
 		Button line = new Button("Line");
@@ -429,12 +438,14 @@ public class WhiteBoardView extends Application {
 			DShape s = new DLine();
 			s.draw(gc);
 			shapes.add(s);
+			tableData.add(s.getShapeModel());
 		});
 		Button text = new Button("Text");
 		text.setOnMouseReleased(e -> {
 			DShape s = new DText();
 			s.draw(gc);
 			shapes.add(s);
+			tableData.add(s.getShapeModel());
 		});
 
 		shapeSelector.getChildren().addAll(addLabel, rectangle, oval, line, text);
@@ -467,6 +478,7 @@ public class WhiteBoardView extends Application {
 				return;
 			// remove selected
 			shapes.remove(shapes.indexOf(selected));
+			tableData.remove(tableData.indexOf(selected.getShapeModel()));
 			selected = null;
 			// clear board
 			redraw();
@@ -479,14 +491,15 @@ public class WhiteBoardView extends Application {
 			shapes = new ArrayList<DShape>();
 			gc.setFill(Color.WHITE);
 			startDraw(primaryStage);
-
 		});
 
 		Button moveFront = new Button("Move to Front");
 		moveFront.setOnMouseReleased(e -> {
 			if (selected != null) {
 				shapes.remove(shapes.indexOf(selected));
+				tableData.remove(tableData.indexOf(selected.getShapeModel()));
 				shapes.add(selected);
+				tableData.add(selected.getShapeModel());
 			}
 			// clear board
 			redraw();
@@ -496,7 +509,9 @@ public class WhiteBoardView extends Application {
 		moveBack.setOnMouseReleased(e -> {
 			if (selected != null) {
 				shapes.remove(shapes.indexOf(selected));
+				tableData.remove(tableData.indexOf(selected.getShapeModel()));
 				shapes.add(0, selected);
+				tableData.add(0, selected.getShapeModel());
 			}
 			redraw();
 		});
@@ -527,8 +542,25 @@ public class WhiteBoardView extends Application {
 
 		textButtons.getChildren().addAll(textField, fontMenu, setText);
 		// TEXT MODIFICATION BUTTONS ABOVE //
+		
+		// TABLE //
+		table.setItems(tableData);
+		
+		TableColumn<DShapeModel, String> xPosCol = new TableColumn<DShapeModel, String>("X");
+		xPosCol.setCellValueFactory(new PropertyValueFactory<>("x"));
+		
+		TableColumn<DShapeModel, Integer> yPosCol = new TableColumn<DShapeModel, Integer>("Y");
+		yPosCol.setCellValueFactory(new PropertyValueFactory<>("y"));
+		
+		TableColumn<DShapeModel, Integer> widthCol = new TableColumn<DShapeModel, Integer>("Width");
+		xPosCol.setCellValueFactory(new PropertyValueFactory<>("width"));
+		
+		TableColumn<DShapeModel, Integer> heightCol = new TableColumn<DShapeModel, Integer>("Height");
+		xPosCol.setCellValueFactory(new PropertyValueFactory<>("height"));
+		table.getColumns().addAll(xPosCol, yPosCol, widthCol, heightCol);
+		// TABLE ABOVE //
 
-		controls.getChildren().addAll(shapeSelector, modifyButtons, textButtons);
+		controls.getChildren().addAll(shapeSelector, modifyButtons, textButtons, table);
 		bp.setRight(p);
 		bp.setLeft(controls);
 		Scene scene = new Scene(bp, 800, 400);
