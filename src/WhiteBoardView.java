@@ -22,6 +22,7 @@ public class WhiteBoardView extends Application {
 	ArrayList<DShape> shapes = new ArrayList<DShape>();
 	DShape knobs[] = new DShape[4]; // 0 == TOP_LEFT, 1 == TOP_RIGHT, 2 ==
 									// BOTTOM_LEFT, 3 == BOTTOM_RIGHT
+	DShape lineKnobs[] = new DShape[2];
 	Canvas canvas;
 	GraphicsContext gc;
 	DShape selected;
@@ -68,25 +69,44 @@ public class WhiteBoardView extends Application {
 								}
 								// draw selected
 								if (selected == s) {
-									isShape = true;
-									int xpos = selected.getX() - DShape.getKnobLength() / 2;
-									int ypos = selected.getY() - DShape.getKnobLength() / 2;
-									int xWidth = selected.getWidth();
-									int yHeight = selected.getHeight();
-									knobs[0] = new DShape();
-									knobs[0].setDShapeModel(xpos, ypos, DShape.getKnobLength(), DShape.getKnobLength(),
-											Color.BLACK);
-									knobs[1] = new DShape();
-									knobs[1].setDShapeModel((xpos + xWidth), ypos, DShape.getKnobLength(),
-											DShape.getKnobLength(), Color.BLACK);
-									knobs[2] = new DShape();
-									knobs[2].setDShapeModel(xpos, (ypos + yHeight), DShape.getKnobLength(),
-											DShape.getKnobLength(), Color.BLACK);
-									knobs[3] = new DShape();
-									knobs[3].setDShapeModel(xpos + xWidth, ypos + yHeight, DShape.getKnobLength(),
-											DShape.getKnobLength(), Color.BLACK);
-									selected.drawSelected(gc);
-									gc.setFill(prev);
+									if (selected instanceof DLine) {
+										//System.out.println("I AM A DLINE");
+										isShape = true;
+										int xpos = selected.getX() - DShape.getKnobLength() / 2;
+										int ypos = selected.getY() - DShape.getKnobLength() / 2;
+										int xWidth = selected.getWidth();
+										int yHeight = selected.getHeight();
+										lineKnobs = new DShape[2];
+										lineKnobs[0] = new DShape();
+										lineKnobs[0].setDShapeModel(xpos, ypos, DShape.getKnobLength(),
+												DShape.getKnobLength(), Color.BLACK);
+										lineKnobs[1] = new DShape();
+										lineKnobs[1].setDShapeModel(xpos + xWidth, ypos + yHeight, DShape.getKnobLength(),
+												DShape.getKnobLength(), Color.BLACK);
+										selected.drawSelected(gc);
+										gc.setFill(prev);
+									} else {
+										isShape = true;
+										int xpos = selected.getX() - DShape.getKnobLength() / 2;
+										int ypos = selected.getY() - DShape.getKnobLength() / 2;
+										int xWidth = selected.getWidth();
+										int yHeight = selected.getHeight();
+										knobs = new DShape[4];
+										knobs[0] = new DShape();
+										knobs[0].setDShapeModel(xpos, ypos, DShape.getKnobLength(),
+												DShape.getKnobLength(), Color.BLACK);
+										knobs[1] = new DShape();
+										knobs[1].setDShapeModel((xpos + xWidth), ypos, DShape.getKnobLength(),
+												DShape.getKnobLength(), Color.BLACK);
+										knobs[2] = new DShape();
+										knobs[2].setDShapeModel(xpos, (ypos + yHeight), DShape.getKnobLength(),
+												DShape.getKnobLength(), Color.BLACK);
+										knobs[3] = new DShape();
+										knobs[3].setDShapeModel(xpos + xWidth, ypos + yHeight, DShape.getKnobLength(),
+												DShape.getKnobLength(), Color.BLACK);
+										selected.drawSelected(gc);
+										gc.setFill(prev);
+									}
 								}
 							}
 							break;
@@ -95,17 +115,18 @@ public class WhiteBoardView extends Application {
 				}
 				if (!isShape) {
 					if (knobs[0] != null) {
-					for (int i = 0; i < knobs.length; i++) {
-						// if mouse location is over a knob
-						int x1 = knobs[i].getX();
-						if (x1 <= e.getX() && e.getX() <= x1 + DShape.getKnobLength()) {
-							int y1 = knobs[i].getY();
-							if (y1 <= e.getY() && y1 + DShape.getKnobLength() >= e.getY()) { 
-//								System.out.println("Knob Detected: Will not de-select");
-								return;
+						for (int i = 0; i < knobs.length; i++) {
+							// if mouse location is over a knob
+							int x1 = knobs[i].getX();
+							if (x1 <= e.getX() && e.getX() <= x1 + DShape.getKnobLength()) {
+								int y1 = knobs[i].getY();
+								if (y1 <= e.getY() && y1 + DShape.getKnobLength() >= e.getY()) {
+									// System.out.println("Knob Detected: Will
+									// not de-select");
+									return;
+								}
 							}
 						}
-					}
 					}
 					selected = null;
 					redraw();
@@ -137,6 +158,7 @@ public class WhiteBoardView extends Application {
 								// update 1
 								knobs[1].move(knobs[1].getX(), newY - knobs[1].getHeight() / 2);
 								// update 2
+								
 								knobs[2].move(newX - knobs[2].getWidth() / 2, knobs[2].getY());
 								selected.setDShapeModel(newX, newY, selected.getWidth() + (oldX - newX),
 										selected.getHeight() + (oldY - newY));
@@ -246,6 +268,7 @@ public class WhiteBoardView extends Application {
 									break;
 								case 1:
 									// resize top right
+									
 									currentKnob = 1;
 									break;
 								case 2:
@@ -336,7 +359,11 @@ public class WhiteBoardView extends Application {
 		});
 
 		Button line = new Button("Line");
-
+		line.setOnMouseReleased(e -> {
+			DShape s = new DLine();
+			s.draw(gc);
+			shapes.add(s);
+		});
 		Button text = new Button("Text");
 		text.setOnMouseReleased(e -> {
 			DShape s = new DText();

@@ -65,5 +65,6 @@ public class DShapeModel {
 	void setFont(Font font) { }
 	String getText() { return ""; }
 	Font getFont() { return null; }
+	
 
 }

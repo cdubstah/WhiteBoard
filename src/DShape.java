@@ -75,6 +75,7 @@ public class DShape{
 		shape.setDShapeModel(x, y, width, height);
 	}
 	
+	
 	// for text
 	void setText(String txt) { }
 	void setFont(Font font) { }
