@@ -7,6 +7,7 @@ public class DShapeModel {
 	private SimpleIntegerProperty xProp, yProp, widthProp, heightProp;
 	private int x, y, width, height;
 	private Color color;
+	private String test;
 
 	public DShapeModel() {
 		x = y = width = height = 0;
@@ -15,6 +16,15 @@ public class DShapeModel {
 		widthProp = new SimpleIntegerProperty(width);
 		heightProp = new SimpleIntegerProperty(height);
 		color = Color.GRAY;
+		test = "test";
+	}
+	
+	public String getTest() {
+		return test;
+	}
+	
+	public void setTest(String test) {
+		this.test = test;
 	}
 
 	void setDefault() {
@@ -60,19 +70,19 @@ public class DShapeModel {
 		this.color = color;
 	}
 
-	int getX() {
+	public int getX() {
 		return x;
 	}
-
-	int getY() {
+	
+	public int getY() {
 		return y;
 	}
 
-	int getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	int getHeight() {
+	public int getHeight() {
 		return height;
 	}
 

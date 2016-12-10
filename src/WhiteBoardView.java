@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 public class WhiteBoardView extends Application {
 	ArrayList<DShape> shapes = new ArrayList<DShape>();
 	ObservableList<DShapeModel> tableData = FXCollections.observableArrayList();
-	TableView<DShapeModel> table = new TableView<DShapeModel>();
+	TableView<DShapeModel> table;
 	DShape knobs[] = new DShape[4]; // 0 == TOP_LEFT, 1 == TOP_RIGHT, 2 ==
 									// BOTTOM_LEFT, 3 == BOTTOM_RIGHT
 	DShape lineKnobs[] = new DShape[2];
@@ -491,6 +491,8 @@ public class WhiteBoardView extends Application {
 			selected = null;
 			shapes = new ArrayList<DShape>();
 			gc.setFill(Color.WHITE);
+			tableData = FXCollections.observableArrayList();
+			table.refresh();
 			startDraw(primaryStage);
 		});
 
@@ -545,20 +547,21 @@ public class WhiteBoardView extends Application {
 		// TEXT MODIFICATION BUTTONS ABOVE //
 		
 		// TABLE //
-		
+		table = new TableView<DShapeModel>();
+		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		table.setMaxHeight(195);
 		
 		TableColumn<DShapeModel, String> xPosCol = new TableColumn<DShapeModel, String>("X");
+		xPosCol.setCellValueFactory(new PropertyValueFactory<DShapeModel, String>("x"));
 		
-		xPosCol.setCellValueFactory(new PropertyValueFactory<>("x"));
-		
-		TableColumn<DShapeModel, Integer> yPosCol = new TableColumn<DShapeModel, Integer>("Y");
+		TableColumn<DShapeModel, Integer> yPosCol = new TableColumn<>("Y");
 		yPosCol.setCellValueFactory(new PropertyValueFactory<>("y"));
 		
-		TableColumn<DShapeModel, Integer> widthCol = new TableColumn<DShapeModel, Integer>("Width");
-		xPosCol.setCellValueFactory(new PropertyValueFactory<>("width"));
+		TableColumn<DShapeModel, Integer> widthCol = new TableColumn<>("Width");
+		widthCol.setCellValueFactory(new PropertyValueFactory<>("width"));
 		
-		TableColumn<DShapeModel, Integer> heightCol = new TableColumn<DShapeModel, Integer>("Height");
-		xPosCol.setCellValueFactory(new PropertyValueFactory<>("height"));
+		TableColumn<DShapeModel, Integer> heightCol = new TableColumn<>("Height");
+		heightCol.setCellValueFactory(new PropertyValueFactory<>("height"));
 		table.getColumns().addAll(xPosCol, yPosCol, widthCol, heightCol);
 		table.setItems(tableData);
 		// TABLE ABOVE //
@@ -589,6 +592,7 @@ public class WhiteBoardView extends Application {
 				selected.drawSelected(gc);
 			}
 		}
+		table.refresh();
 	}
 	
 	
@@ -607,6 +611,7 @@ public class WhiteBoardView extends Application {
 			}
 			gc.setFill(prev);
 		}
+		table.refresh();
 	}
 
 	public void redrawPrev(Paint prev) {
@@ -623,6 +628,7 @@ public class WhiteBoardView extends Application {
 				selected.drawSelected(gc);
 			gc.setFill(prev);
 		}
+		table.refresh();
 	}
 
 	public static void main(String[] args) {
