@@ -23,14 +23,15 @@ public class DText extends DShape {
 		gc.setFill(shape.getColor());
 		computeFont();
 		gc.setFont(shape.getFont());
-		gc.fillText(shape.getText(), shape.getX(), shape.getY() + shape.getHeight());
 		clipText(gc);
+		gc.fillText(shape.getText(), shape.getX(), shape.getY() + shape.getHeight());
 	}
 	
 	void drawSelected(GraphicsContext gc) {
 		gc.setFill(shape.getColor());
 		computeFont();
 		gc.setFont(shape.getFont());
+		clipText(gc);
 		gc.fillText(shape.getText(), shape.getX(), shape.getY() + shape.getHeight());
 		gc.setFill(Color.BLACK);
 		drawKnobs(gc);
@@ -40,14 +41,18 @@ public class DText extends DShape {
 		shape.setColor(color);
 		gc.setFill(color);
 		computeFont();
+		clipText(gc);
 		gc.fillText(shape.getText(), shape.getX(), shape.getY() + shape.getHeight());
 		gc.setFill(Color.BLACK);
 		drawKnobs(gc);
-	
 	}
 	
 	void setText(String txt) {
 		shape.setText(txt);
+	}
+	
+	void setWholeText(String txt) {
+		shape.setWholeText(txt);
 	}
 	
 	void setFont(Font font) {
@@ -70,10 +75,28 @@ public class DText extends DShape {
 		Font newFont = Font.font(getFont().getName(), shape.getFont().getSize());
 		FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
 		double textWidth = fm.computeStringWidth(shape.getText());
-//		if(textWidth > shape.getWidth()) {
-//			// clip
-//			gc.rect(shape.getX() + shape.getWidth(), shape.getY(), textWidth - shape.getWidth(), shape.getHeight());
-//			gc.clip();
-//		}
+		while(textWidth > shape.getWidth()) {
+			if(shape.getText().length() == 0)
+				break;
+			shape.setText(shape.getText().substring(0, shape.getText().length() - 1));
+			newFont = Font.font(getFont().getName(), shape.getFont().getSize());
+			fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
+			textWidth = fm.computeStringWidth(shape.getText());
+		}
+		if(textWidth <= shape.getWidth()) {
+			String test = shape.getText();
+			newFont = Font.font(getFont().getName(), shape.getFont().getSize());
+			fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
+			textWidth = fm.computeStringWidth(test);
+			while(textWidth <= shape.getWidth()) {
+				if(test.length() == shape.getWholeText().length())
+					break;
+				test += String.valueOf(shape.getWholeText().charAt(test.length()));
+				newFont = Font.font(getFont().getName(), shape.getFont().getSize());
+				fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
+				textWidth = fm.computeStringWidth(test);
+			}
+			shape.setText(test);
+		}
 	}
 }

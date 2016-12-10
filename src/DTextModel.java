@@ -4,12 +4,12 @@ import com.sun.javafx.tk.Toolkit;
 import javafx.scene.text.Font;
 
 public class DTextModel extends DShapeModel {
-	String txt;
+	String txt, wholetxt;
 	Font font;
 	double fontSize;
 	
 	DTextModel() {
-		txt = "Hello";
+		txt = wholetxt = "Hello";
 		fontSize = 20;
 		font = Font.font("Dialog", fontSize);
 	}
@@ -20,7 +20,9 @@ public class DTextModel extends DShapeModel {
 		font = Font.font("Dialog", 12);
 	}
 	
-	
+	void setWholeText(String txt) {
+		wholetxt = txt;
+	}
 	
 	void setText(String txt) {
 		this.txt = txt;
@@ -39,6 +41,10 @@ public class DTextModel extends DShapeModel {
 		return txt;
 	}
 	
+	String getWholeText() {
+		return wholetxt;
+	}
+	
 	Font getFont() {
 		return font;
 	}
@@ -51,14 +57,13 @@ public class DTextModel extends DShapeModel {
 		double newSize = getFont().getSize();
 		Font newFont = Font.font(getFont().getName(), newSize);
 		FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
-		double textHeight = (fm.getMaxAscent() + fm.getMaxDescent()) / 1.75;
-		double textWidth = fm.computeStringWidth(getText());
+		double textHeight = fm.getMaxAscent() / 1.25;
 
 		while(getHeight() > textHeight) {
 			newSize = (newSize * 1.1) + 1;
 			newFont = Font.font(getFont().getName(), newSize);
 			fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
-			textHeight = (fm.getMaxAscent() + fm.getMaxDescent()) / 1.75;
+			textHeight = fm.getMaxAscent() / 1.25;
 		}
 		while(getHeight() * 1.1 < textHeight) {
 			newSize = (newSize * .9) - 1;
@@ -68,7 +73,7 @@ public class DTextModel extends DShapeModel {
 			}
 			newFont = Font.font(getFont().getName(), newSize);
 			fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
-			textHeight = (fm.getMaxAscent() + fm.getMaxDescent()) / 1.75;
+			textHeight = fm.getMaxAscent() / 1.25;
 		}
 		setFontSize(newSize);
 	}

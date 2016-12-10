@@ -62,9 +62,11 @@ public class DShapeModel {
 	
 	// for text
 	void setText(String txt) { }
+	void setWholeText(String txt) { }
 	void setFont(Font font) { }
 	void setFontSize(double size) { }
 	String getText() { return ""; }
+	String getWholeText() { return ""; }
 	Font getFont() { return null; }
 	void computeFont() { };
 }

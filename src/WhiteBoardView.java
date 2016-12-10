@@ -411,7 +411,7 @@ public class WhiteBoardView extends Application {
 			}
 			redraw();
 		});
-
+		
 		modifyButtons.getChildren().addAll(modifyLabel, cp, setColor, delete, reset, moveFront, moveBack);
 		// MODIFICATION BUTTONS ABOVE //
 
@@ -431,6 +431,7 @@ public class WhiteBoardView extends Application {
 			if (selected == null)
 				return;
 			selected.setText(textField.getText());
+			selected.setWholeText(textField.getText());
 			selected.setFont(Font.font(fontMenu.getValue()));
 			redraw();
 		});
