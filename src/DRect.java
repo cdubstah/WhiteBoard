@@ -1,7 +1,14 @@
+import java.io.Serializable;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DRect extends DShape {
+public class DRect extends DShape implements Serializable{
+	
+	public DRect(){
+		shape = new DRectModel();
+		shape.setDefault();
+	}
 
 	void draw(GraphicsContext gc) {
 		gc.setFill(shape.getColor());

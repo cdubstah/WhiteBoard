@@ -1,12 +1,15 @@
 
+import java.io.Serializable;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class DShapeModel {
+public class DShapeModel implements Serializable{
 	private SimpleIntegerProperty xProp, yProp, widthProp, heightProp;
 	private int x, y, width, height;
 	private Color color;
+	private double red, green, blue, opacity;
 	private String test;
 
 	public DShapeModel() {
@@ -17,6 +20,10 @@ public class DShapeModel {
 		heightProp = new SimpleIntegerProperty(height);
 		color = Color.GRAY;
 		test = "test";
+		
+		red = .8;
+		green = .8;
+		blue = .8;
 	}
 	
 	public String getTest() {
@@ -27,7 +34,9 @@ public class DShapeModel {
 		this.test = test;
 	}
 
-	void setDefault() {
+	public void setDefault() {
+		opacity = 1;
+		color = Color.GRAY;
 		x = y = 10;
 		xProp.setValue(10);
 		yProp.setValue(10);
@@ -36,7 +45,7 @@ public class DShapeModel {
 		heightProp.setValue(20);
 	}
 
-	void setDShapeModel(int x, int y, int width, int height, Color color) {
+	public void setDShapeModel(int x, int y, int width, int height, Color color) {
 		this.x = x;
 		xProp.setValue(x);
 		this.y = y;
@@ -48,7 +57,7 @@ public class DShapeModel {
 		this.color = color;
 	}
 	
-	void setDShapeModel(int x, int y, int width, int height) {
+	public void setDShapeModel(int x, int y, int width, int height) {
 		this.x = x;
 		xProp.setValue(x);
 		this.y = y;
@@ -59,37 +68,96 @@ public class DShapeModel {
 		heightProp.setValue(height);
 	}
 
-	void move(int x, int y) {
+	public void move(int x, int y) {
 		this.x = x;
 		xProp.setValue(x);
 		this.y = y;
 		yProp.setValue(y);
 	}
 	
-	void setColor(Color color) {
+	public DShape createShape(){
+		DShape shape = new DShape();
+		Color color = new Color(this.getRed(), this.getGreen(), this.getBlue(), this.getOpacity());
+		shape.setDShapeModel(this.getX(), this.getY(), this.getWidth(), this.getHeight(), color);
+		return shape;
+	}
+	
+	public void setColor(Color color) {
 		this.color = color;
+		red = color.getRed();
+		green = color.getGreen();
+		blue = color.getBlue();
+		opacity = color.getOpacity();
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+	
+	public void setRed(double red){
+		this.red = red;
+	}
+	
+	public double getRed(){
+		return red;
+	}
+	
+	public void setGreen(double green){
+		this.green = green;
+	}
+	
+	public double getGreen(){
+		return green;
+	}
+	
+	public void setBlue(double blue){
+		this.blue = blue;
+	}
+	
+	public double getBlue(){
+		return blue;
+	}
+	
+	public void setOpacity(double opacity){
+		this.opacity = opacity;
+	}
+	
+	public double getOpacity(){
+		return opacity;
+	}
+	
+	public void setX(int x){
+		this.x = x;
 	}
 
 	public int getX() {
 		return x;
 	}
 	
+	public void setY(int y){
+		this.y = y;
+	}
+	
 	public int getY() {
 		return y;
+	}
+	
+	public void setWidth(int width){
+		this.width = width;
 	}
 
 	public int getWidth() {
 		return width;
+	}
+	
+	public void setHeight(int height){
+		this.height = height;
 	}
 
 	public int getHeight() {
 		return height;
 	}
 
-	Color getColor() {
-		return color;
-	}
-	
 	// for text
 	void setText(String txt) { }
 	void setWholeText(String txt) { }

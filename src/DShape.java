@@ -1,10 +1,12 @@
+import java.io.Serializable;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class DShape{
+public class DShape implements Serializable{
 	DShapeModel shape;
-	final static int KNOB_LENGTH = 9;
+	final static transient int KNOB_LENGTH = 9;
 
 	public DShape() {
 		shape = new DShapeModel();

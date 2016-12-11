@@ -1,6 +1,6 @@
+import java.io.File;
 import java.util.ArrayList;
 import javafx.application.Application;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
@@ -24,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class WhiteBoardView extends Application {
@@ -41,6 +43,8 @@ public class WhiteBoardView extends Application {
 	ComboBox<String> fontMenu;
 	boolean isResizing = false, isDragging = false;
 	int currentKnob;
+	FileIO io;
+	TextInputDialog textBox;
 	
 	public void start(Stage primaryStage) throws Exception {
 		startDraw(primaryStage);
@@ -55,6 +59,8 @@ public class WhiteBoardView extends Application {
 		p.setMinSize(1920, 1080);
 		p.setStyle("-fx-background-color : white");
 		canvas = new Canvas(1920, 1080);// CANVAS
+		
+		io = new FileIO(this);
 
 		p.getChildren().add(canvas);
 		gc = canvas.getGraphicsContext2D();
@@ -530,7 +536,39 @@ public class WhiteBoardView extends Application {
 			redraw();
 		});
 		
-		modifyButtons.getChildren().addAll(modifyLabel, cp, setColor, delete, reset, moveFront, moveBack);
+		Button save = new Button("Save File");
+		save.setOnMouseReleased(e -> {
+			FileChooser fc = new FileChooser();
+			FileChooser.ExtensionFilter ef = new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
+			fc.getExtensionFilters().add(ef);
+			
+			File f = fc.showSaveDialog(primaryStage);
+			
+			io.save(f, shapes);
+		});
+		
+		Button open = new Button("Open File");
+		open.setOnMouseReleased(e -> {
+			FileChooser fc = new FileChooser();
+			FileChooser.ExtensionFilter ef = new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
+			fc.getExtensionFilters().add(ef);
+			
+			File f = fc.showOpenDialog(primaryStage);
+			
+			io.open(f);
+		});
+		
+		Button saveImage = new Button("Save Image");
+		saveImage.setOnMouseReleased(e -> {
+			FileChooser fc = new FileChooser();
+			FileChooser.ExtensionFilter ef = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+			fc.getExtensionFilters().add(ef);
+			
+			File f = fc.showSaveDialog(primaryStage);
+			io.saveImage(f);
+		});
+		
+		modifyButtons.getChildren().addAll(modifyLabel, cp, setColor, delete, reset, moveFront, moveBack, save, open, saveImage);
 		// MODIFICATION BUTTONS ABOVE //
 
 		// TEXT MODIFICATION BUTTONS //
@@ -581,6 +619,18 @@ public class WhiteBoardView extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
+	}
+	
+	public void addShapes(DShapeModel[] model){
+		shapes.clear();
+		for(DShapeModel dm : model){
+			DShape d = dm.createShape();
+			//DShape ds = (DRect)d; //CHANGE THIS
+			//Color color = new Color(dm.getRed(), dm.getGreen(), dm.getBlue(), dm.getOpacity());
+			//d.setDShapeModel(dm.getX(), dm.getY(), dm.getWidth(), dm.getHeight(), color);
+			shapes.add(d);
+		}
+		redraw();
 	}
 
 	public void redraw() {

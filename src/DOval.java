@@ -3,6 +3,11 @@ import javafx.scene.paint.Color;
 
 public class DOval extends DShape {
 	
+	public DOval(){
+		shape = new DOvalModel();
+		shape.setDefault();
+	}
+	
 	void draw(GraphicsContext gc) {
 		gc.setFill(shape.getColor());
 		gc.fillOval(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());

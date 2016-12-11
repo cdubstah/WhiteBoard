@@ -1,6 +1,7 @@
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class DTextModel extends DShapeModel {
@@ -8,52 +9,59 @@ public class DTextModel extends DShapeModel {
 	Font font;
 	double fontSize;
 	
-	DTextModel() {
+	public DTextModel() {
 		txt = wholetxt = "Hello";
 		fontSize = 20;
 		font = Font.font("Dialog", fontSize);
 	}
 	
-	DTextModel(String txt) {
+	public DTextModel(String txt) {
 		super();
 		this.txt = txt;
 		font = Font.font("Dialog", 12);
 	}
 	
-	void setWholeText(String txt) {
+	public DShape createShape(){
+		DShape shape = new DText();
+		Color color = new Color(this.getRed(), this.getGreen(), this.getBlue(), this.getOpacity());
+		shape.setDShapeModel(this.getX(), this.getY(), this.getWidth(), this.getHeight(), color);
+		return shape;
+	}
+	
+	public void setWholeText(String txt) {
 		wholetxt = txt;
 	}
 	
-	void setText(String txt) {
+	public void setText(String txt) {
 		this.txt = txt;
 	}
 	
-	void setFont(Font font) {
+	public void setFont(Font font) {
 		this.font = Font.font(font.getName(), this.font.getSize());
 	}
 	
-	void setFontSize(double size) {
+	public void setFontSize(double size) {
 		this.fontSize = size;
 		font = Font.font(font.getName(), size);
 	}
 	
-	String getText() {
+	public String getText() {
 		return txt;
 	}
 	
-	String getWholeText() {
+	public String getWholeText() {
 		return wholetxt;
 	}
 	
-	Font getFont() {
+	public Font getFont() {
 		return font;
 	}
 	
-	double getFontSize() {
+	public double getFontSize() {
 		return fontSize;
 	}
 	
-	void computeFont() {
+	public void computeFont() {
 		double newSize = getFont().getSize();
 		Font newFont = Font.font(getFont().getName(), newSize);
 		FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(newFont);
