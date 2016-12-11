@@ -77,7 +77,22 @@ public class DShape implements Serializable{
 		shape.setDShapeModel(x, y, width, height);
 	}
 	
+	int getId() {
+		return shape.getId();
+	}
 	
+	void setId(int id) {
+		shape.setId(id);
+	}
+	
+	public DShapeModel getShape() {
+		return shape;
+	}
+
+	public void setShape(DShapeModel shape) {
+		this.shape = shape;
+	}
+
 	// for text
 	void setText(String txt) { }
 	void setWholeText(String txt) { }

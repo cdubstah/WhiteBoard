@@ -11,6 +11,16 @@ public class DShapeModel implements Serializable{
 	private Color color;
 	private double red, green, blue, opacity;
 	private String test;
+	
+	private int id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public DShapeModel() {
 		x = y = width = height = 0;
