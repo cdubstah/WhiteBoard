@@ -56,6 +56,7 @@ public class DText extends DShape {
 	}
 	
 	void setFont(Font font) {
+		shape.setFontName(font.getName());
 		shape.setFont(font);
 	}
 	
@@ -73,6 +74,14 @@ public class DText extends DShape {
 	
 	void computeFont() {
 		shape.computeFont();
+	}
+	
+	public String getFontName() {
+		return shape.getFontName();
+	}
+
+	public void setFontName(String fontName) {
+		shape.setFontName(fontName);
 	}
 	
 	void clipText(GraphicsContext gc) {

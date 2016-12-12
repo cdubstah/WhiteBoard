@@ -10,7 +10,6 @@ public class DShapeModel implements Serializable{
 	private int x, y, width, height;
 	private Color color;
 	private double red, green, blue, opacity;
-	private String test;
 	
 	private int id;
 
@@ -29,21 +28,12 @@ public class DShapeModel implements Serializable{
 		widthProp = new SimpleIntegerProperty(width);
 		heightProp = new SimpleIntegerProperty(height);
 		color = Color.GRAY;
-		test = "test";
 		
-		red = .8;
-		green = .8;
-		blue = .8;
+		red = color.getRed();
+		green = color.getGreen();
+		blue = color.getBlue();
 	}
 	
-	public String getTest() {
-		return test;
-	}
-	
-	public void setTest(String test) {
-		this.test = test;
-	}
-
 	public void setDefault() {
 		opacity = 1;
 		color = Color.GRAY;
@@ -173,6 +163,8 @@ public class DShapeModel implements Serializable{
 	void setWholeText(String txt) { }
 	void setFont(Font font) { }
 	void setFontSize(double size) { }
+	public String getFontName() { return ""; }
+	public void setFontName(String fontName) { }
 	String getText() { return ""; }
 	String getWholeText() { return ""; }
 	Font getFont() { return null; }

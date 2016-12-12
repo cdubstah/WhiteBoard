@@ -8,13 +8,23 @@ public class DTextModel extends DShapeModel {
 	String txt, wholetxt;
 	Font font;
 	double fontSize;
+	String fontName;
 	
 	public DTextModel() {
 		txt = wholetxt = "Hello";
 		fontSize = 20;
-		font = Font.font("Dialog", fontSize);
+		fontName = "Dialog";
+		font = Font.font(fontName, fontSize);
 	}
 	
+	public String getFontName() {
+		return fontName;
+	}
+
+	public void setFontName(String fontName) {
+		this.fontName = fontName;
+	}
+
 	public DTextModel(String txt) {
 		super();
 		this.txt = txt;
@@ -37,7 +47,8 @@ public class DTextModel extends DShapeModel {
 	}
 	
 	public void setFont(Font font) {
-		this.font = Font.font(font.getName(), this.font.getSize());
+		this.fontName = font.getName();
+		this.font = Font.font(fontName, this.font.getSize());
 	}
 	
 	public void setFontSize(double size) {

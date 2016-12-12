@@ -548,16 +548,16 @@ public class WhiteBoardView extends Application {
 			redraw();
 		});
 
-		Button reset = new Button("RESET");
-		reset.setTextFill(Color.RED);
-		reset.setOnMouseReleased(e -> {
-			selected = null;
-			shapes = new ArrayList<DShape>();
-			gc.setFill(Color.WHITE);
-			tableData = FXCollections.observableArrayList();
-			table.refresh();
-			startDraw(primaryStage);
-		});
+//		Button reset = new Button("RESET");
+//		reset.setTextFill(Color.RED);
+//		reset.setOnMouseReleased(e -> {
+//			selected = null;
+//			shapes = new ArrayList<DShape>();
+//			gc.setFill(Color.WHITE);
+//			tableData = FXCollections.observableArrayList();
+//			table.refresh();
+//			startDraw(primaryStage);
+//		});
 
 		Button moveFront = new Button("Move to Front");
 		moveFront.setOnMouseReleased(e -> {
@@ -593,7 +593,11 @@ public class WhiteBoardView extends Application {
 			fc.getExtensionFilters().add(ef);
 
 			File f = fc.showSaveDialog(primaryStage);
-
+			for(DShape s: shapes) {
+				Color temp = s.getShapeModel().getColor();
+				s.setColor(Color.TRANSPARENT);
+				s.setColor(temp);
+			}
 			io.save(f, shapes);
 		});
 
@@ -604,6 +608,8 @@ public class WhiteBoardView extends Application {
 			fc.getExtensionFilters().add(ef);
 
 			File f = fc.showOpenDialog(primaryStage);
+			
+			tableData = FXCollections.observableArrayList();
 
 			io.open(f);
 			for (int i = 0; i < shapes.size(); i++) {
@@ -622,7 +628,7 @@ public class WhiteBoardView extends Application {
 			io.saveImage(f);
 		});
 
-		modifyButtons.getChildren().addAll(modifyLabel, cp, setColor, delete, reset, moveFront, moveBack, save, open,
+		modifyButtons.getChildren().addAll(modifyLabel, cp, setColor, delete, moveFront, moveBack, save, open,
 				saveImage);
 		// MODIFICATION BUTTONS ABOVE //
 
@@ -680,10 +686,6 @@ public class WhiteBoardView extends Application {
 				textButtons.getChildren().get(i).setDisable(true);
 			for(int i = 0; i < networkButtons.getChildren().size(); i++)
 				networkButtons.getChildren().get(i).setDisable(true);
-			// loop:
-			// receive info from server
-			// redraw
-			// refresh table
 			primaryStage.setTitle("WHITEBOARD - Client Mode");
 		});
 
@@ -693,7 +695,7 @@ public class WhiteBoardView extends Application {
 		// TABLE //
 		table = new TableView<DShapeModel>();
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		table.setMaxHeight(195);
+		table.setMaxHeight(300);
 
 		TableColumn<DShapeModel, String> xPosCol = new TableColumn<DShapeModel, String>("X");
 		xPosCol.setCellValueFactory(new PropertyValueFactory<DShapeModel, String>("x"));
@@ -848,7 +850,6 @@ public class WhiteBoardView extends Application {
                     shape.setId(model.getId());
                     shape.setWholeText(model.getWholeText());
                     shape.setText(model.getWholeText());
-                    // accept shit
                     int index = 0;
                     for(int i = 0; i < shapes.size(); i++) {
                     	if(action.equals("add"))
@@ -867,14 +868,19 @@ public class WhiteBoardView extends Application {
                     	break;
                     case "front":
                     	shapes.remove(index);
+                    	tableData.remove(index);
                     	shapes.add(shape);
+                    	tableData.add(shape.getShapeModel());
                     	break;
                     case "back":
                     	shapes.remove(index);
+                    	tableData.remove(index);
                     	shapes.add(0, shape);
+                    	tableData.add(0, shape.getShapeModel());
                     	break;
                     case "modify":
                     	shapes.get(index).setShape(shape.getShapeModel());
+                    	tableData.get(index).setDShapeModel(shape.getX(), shape.getY(), shape.getWidth(), shape.getHeight());
                     	break;
                     }
                     table.setItems(tableData);

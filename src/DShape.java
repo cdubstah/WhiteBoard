@@ -97,6 +97,8 @@ public class DShape implements Serializable{
 	void setText(String txt) { }
 	void setWholeText(String txt) { }
 	void setFont(Font font) { }
+	public String getFontName() { return ""; }
+	public void setFontName(String fontName) { }
 	String getText() { return ""; }
 	String getWholeText() { return ""; }
 	Font getFont() { return Font.getDefault(); }
