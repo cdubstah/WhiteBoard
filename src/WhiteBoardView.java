@@ -417,17 +417,25 @@ public class WhiteBoardView extends Application {
 					int ypos = selected.getY() - DShape.getKnobLength() / 2;
 					int xWidth = selected.getWidth();
 					int yHeight = selected.getHeight();
-					knobs[0] = new DShape();
-					knobs[0].setDShapeModel(xpos, ypos, DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
-					knobs[1] = new DShape();
-					knobs[1].setDShapeModel((xpos + xWidth), ypos, DShape.getKnobLength(), DShape.getKnobLength(),
-							Color.BLACK);
-					knobs[2] = new DShape();
-					knobs[2].setDShapeModel(xpos, (ypos + yHeight), DShape.getKnobLength(), DShape.getKnobLength(),
-							Color.BLACK);
-					knobs[3] = new DShape();
-					knobs[3].setDShapeModel(xpos + xWidth, ypos + yHeight, DShape.getKnobLength(),
-							DShape.getKnobLength(), Color.BLACK);
+					if(selected instanceof DLine) {
+						lineKnobs[0] = new DShape();
+						lineKnobs[0].setDShapeModel(xpos, ypos, DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+						lineKnobs[1] = new DShape();
+						lineKnobs[1].setDShapeModel(xpos + xWidth, ypos + yHeight, DShape.getKnobLength(),
+								DShape.getKnobLength(), Color.BLACK);
+					} else {
+						knobs[0] = new DShape();
+						knobs[0].setDShapeModel(xpos, ypos, DShape.getKnobLength(), DShape.getKnobLength(), Color.BLACK);
+						knobs[1] = new DShape();
+						knobs[1].setDShapeModel((xpos + xWidth), ypos, DShape.getKnobLength(), DShape.getKnobLength(),
+								Color.BLACK);
+						knobs[2] = new DShape();
+						knobs[2].setDShapeModel(xpos, (ypos + yHeight), DShape.getKnobLength(), DShape.getKnobLength(),
+								Color.BLACK);
+						knobs[3] = new DShape();
+						knobs[3].setDShapeModel(xpos + xWidth, ypos + yHeight, DShape.getKnobLength(),
+								DShape.getKnobLength(), Color.BLACK);
+					}
 					// clear board
 					Paint prev = gc.getFill();
 					redrawPrev(prev);
