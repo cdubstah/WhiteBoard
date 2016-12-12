@@ -646,6 +646,8 @@ public class WhiteBoardView extends Application {
 			selected.setText(textField.getText());
 			selected.setWholeText(textField.getText());
 			selected.setFont(Font.font(fontMenu.getValue()));
+			selected.setFontName(selected.getFont().getName());
+			System.out.println(selected.getFontName());
 			redraw();
 			if(isServer)
 				sendRemote("modify", selected.getShapeModel());
@@ -850,6 +852,9 @@ public class WhiteBoardView extends Application {
                     shape.setId(model.getId());
                     shape.setWholeText(model.getWholeText());
                     shape.setText(model.getWholeText());
+                    shape.setFontName(model.getFontName());
+                    Font font = new Font(model.getFontName(), model.getFontSize());
+                    shape.setFont(font);
                     int index = 0;
                     for(int i = 0; i < shapes.size(); i++) {
                     	if(action.equals("add"))

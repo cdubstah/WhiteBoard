@@ -163,6 +163,7 @@ public class DShapeModel implements Serializable{
 	void setWholeText(String txt) { }
 	void setFont(Font font) { }
 	void setFontSize(double size) { }
+	double getFontSize() { return 0; }
 	public String getFontName() { return ""; }
 	public void setFontName(String fontName) { }
 	String getText() { return ""; }

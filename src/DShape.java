@@ -99,6 +99,7 @@ public class DShape implements Serializable{
 	void setFont(Font font) { }
 	public String getFontName() { return ""; }
 	public void setFontName(String fontName) { }
+	double getFontSize() { return shape.getFontSize(); }
 	String getText() { return ""; }
 	String getWholeText() { return ""; }
 	Font getFont() { return Font.getDefault(); }
